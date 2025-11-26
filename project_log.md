@@ -2,6 +2,12 @@
 
 ## Log Entries
 
+### [2025-11-26] Project Modernization
+- **Event**: User requested best-in-class dependency management.
+- **Action**: Converted project to a Python package with `pyproject.toml` and `src/` layout.
+- **Action**: Removed `requirements.txt`.
+- **Status**: Project is now installable via `pip install .` or `uv`.
+
 ### [2025-11-26] Repo Cleanup
 - **Event**: User requested cleanup.
 - **Action**: Added `.gitignore` to exclude `__pycache__` and system files.
