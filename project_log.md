@@ -2,6 +2,12 @@
 
 ## Log Entries
 
+### [2025-11-26] Repo Cleanup
+- **Event**: User requested cleanup.
+- **Action**: Added `.gitignore` to exclude `__pycache__` and system files.
+- **Action**: Removed `manager_prompt.md` from the repository.
+- **Status**: Repository is clean and version controlled.
+
 ### [2025-11-26] Content Ingestion & Finalization
 - **Event**: Received source corpus URL.
 - **Action**: Fetched `02_molecules_context.md`, `05_cognitive_tools.md`, and `07_prompt_programming.md`.
