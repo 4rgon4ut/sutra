@@ -185,6 +185,23 @@ def get_reference_layers() -> str:
     5. Systems: Interconnected networks (Agents).
     """
 
+@mcp.resource("context://fields/resonance")
+def get_neural_fields() -> str:
+    """
+    Returns Neural Field primitives (Module 08-10).
+    """
+    return """
+    # Neural Field Protocols (Module 08-10)
+
+    ## Resonance Field
+    A structure for maintaining context persistence across long interaction horizons.
+
+    [FIELD_DEFINITION]
+    Type: Resonance
+    Decay_Rate: Low
+    Attractors: [Core Intent, User Preferences]
+    """
+
 def main():
     mcp.run()
 
