@@ -26,19 +26,43 @@ pip install .
 
 ### Configuration
 
-Add the server to your `claude_desktop_config.json`:
-
+#### Claude Desktop
+Add to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
     "sutra": {
       "command": "uv",
-      "args": [
-        "run",
-        "context-engineering-mcp"
-      ]
+      "args": ["run", "context-engineering-mcp"]
     }
   }
+}
+```
+
+#### Gemini CLI
+Add to `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "sutra": {
+      "command": "uv",
+      "args": ["run", "context-engineering-mcp"]
+    }
+  }
+}
+```
+
+#### Continue.dev (VS Code / JetBrains)
+Add to `~/.continue/config.json`:
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sutra",
+      "command": "uv",
+      "args": ["run", "context-engineering-mcp"]
+    }
+  ]
 }
 ```
 
