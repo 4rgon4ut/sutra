@@ -116,6 +116,7 @@ function solve_math_with_cognitive_tools(problem) {
 
 # --- Tools ---
 
+
 @mcp.tool()
 def get_protocol_shell(intent: str, name: str = "MyProtocol") -> str:
     """
@@ -127,6 +128,7 @@ def get_protocol_shell(intent: str, name: str = "MyProtocol") -> str:
     """
     return PROTOCOL_SHELL_STRUCTURE.format(name=name, intent=intent)
 
+
 @mcp.tool()
 def get_molecular_template() -> str:
     """
@@ -134,6 +136,7 @@ def get_molecular_template() -> str:
     Use this to programmatically construct few-shot prompts.
     """
     return MOLECULAR_CONTEXT_FUNC
+
 
 @mcp.tool()
 def get_prompt_program(program_type: str = "math") -> str:
@@ -146,9 +149,14 @@ def get_prompt_program(program_type: str = "math") -> str:
     if program_type == "math":
         return PROMPT_PROGRAM_MATH_TEMPLATE
     else:
-        return f"// Program type '{program_type}' not yet implemented. Returning generic structure.\\n" + PROMPT_PROGRAM_MATH_TEMPLATE
+        return (
+            f"// Program type '{program_type}' not yet implemented. Returning generic structure.\\n"
+            + PROMPT_PROGRAM_MATH_TEMPLATE
+        )
+
 
 # --- Resources ---
+
 
 @mcp.resource("context://molecules/cot")
 def get_cot_molecules() -> str:
@@ -169,6 +177,7 @@ def get_cot_molecules() -> str:
     MOLECULE = [INSTRUCTION] + [EXAMPLES] + [CONTEXT] + [NEW INPUT]
     """
 
+
 @mcp.resource("context://reference/layers")
 def get_reference_layers() -> str:
     """
@@ -183,6 +192,7 @@ def get_reference_layers() -> str:
     4. Organs: Specialized structures (Protocol Shells).
     5. Systems: Interconnected networks (Agents).
     """
+
 
 @mcp.resource("context://fields/resonance")
 def get_neural_fields() -> str:
@@ -201,8 +211,10 @@ def get_neural_fields() -> str:
     Attractors: [Core Intent, User Preferences]
     """
 
+
 def main():
     mcp.run()
+
 
 if __name__ == "__main__":
     main()
