@@ -2,6 +2,12 @@
 
 ## Log Entries
 
+### [2025-11-26] Documentation Initialization
+- **Event**: User requested repository documentation.
+- **Action**: Created `LICENSE` (MIT) and `README.md`.
+- **Action**: Added `context://fields/resonance` placeholder to `server.py` to align with README capabilities.
+- **Status**: Repository is public-ready with professional documentation.
+
 ### [2025-11-26] Project Modernization
 - **Event**: User requested best-in-class dependency management.
 - **Action**: Converted project to a Python package with `pyproject.toml` and `src/` layout.
