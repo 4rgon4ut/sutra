@@ -1,5 +1,3 @@
-import pytest
-import json
 from context_engineering_mcp.server import get_protocol_shell, get_prompt_program, get_molecular_template, get_cot_molecules, get_reference_layers
 
 def test_get_protocol_shell():

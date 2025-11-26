@@ -1,5 +1,4 @@
 from mcp.server.fastmcp import FastMCP
-from typing import Dict, Any
 
 # Initialize FastMCP server
 mcp = FastMCP("Context Engineering MCP")
