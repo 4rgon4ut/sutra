@@ -66,6 +66,14 @@ Add to `~/.continue/config.json`:
 }
 ```
 
+#### Codex
+Add to your configuration file (TOML):
+```toml
+[mcp_servers.sutra]
+command = "uv"
+args = ["run", "context-engineering-mcp"]
+```
+
 ## Usage Example
 
 Retrieve a **Protocol Shell** to structure a new cognitive tool:
