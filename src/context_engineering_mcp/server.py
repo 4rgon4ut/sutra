@@ -185,5 +185,8 @@ def get_reference_layers() -> str:
     5. Systems: Interconnected networks (Agents).
     """
 
-if __name__ == "__main__":
+def main():
     mcp.run()
+
+if __name__ == "__main__":
+    main()
