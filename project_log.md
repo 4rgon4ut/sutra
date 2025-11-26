@@ -2,6 +2,13 @@
 
 ## Log Entries
 
+### [2025-11-26] CI/CD Configuration
+- **Event**: User requested GitHub Actions workflows.
+- **Action**: Created `.github/workflows/ci.yml` for linting (`ruff`), type checking (`mypy`), and testing (`pytest`).
+- **Action**: Created `.github/workflows/release.yml` for automated release drafts.
+- **Action**: Updated `pyproject.toml` with `dev` dependencies.
+- **Status**: Repository has a robust quality gate and automated release pipeline.
+
 ### [2025-11-26] Documentation Initialization
 - **Event**: User requested repository documentation.
 - **Action**: Created `LICENSE` (MIT) and `README.md`.
