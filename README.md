@@ -103,5 +103,5 @@ mcp call get_molecular_template
 ## Acknowledgments
 
 Special thanks to:
-*   **Andrej Karpathy** for his pioneering work and inspiration in the field of AI.
+*   **[Andrej Karpathy](https://x.com/karpathy/status/1937902205765607626)** for his pioneering work and inspiration in the field of AI.
 *   **David Kim** for the [Context Engineering](https://github.com/davidkimai/Context-Engineering) framework, which heavily inspired the architecture of this server.
