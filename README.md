@@ -74,12 +74,34 @@ command = "uv"
 args = ["run", "context-engineering-mcp"]
 ```
 
-print(result.content[0].text)
+## Usability & Optimization Tools
+*   **The Librarian (`get_technique_guide`)**: Returns a guide to available techniques, helping you or the LLM choose the right tool for the job.
+*   **The Router (`analyze_task_complexity`)**: Analyzes a task description and recommends the most efficient tool (Low/Medium/High complexity).
+
+## Usage Examples
+
+### 1. Discovery (The Librarian)
+```bash
+mcp call get_technique_guide --arg category="reasoning"
 ```
 
-Retrieve a **Molecular Context** template:
-
-```python
-# Get the Python function for constructing molecules
-template_code = await client.call_tool("get_molecular_template")
+### 2. Auto-Dispatch (The Router)
+```bash
+mcp call analyze_task_complexity --arg task_description="I need to refactor the auth module and add tests"
 ```
+
+### 3. Getting a Protocol Shell
+```bash
+mcp call get_protocol_shell --arg name="reasoning.systematic"
+```
+
+### 4. Getting a Molecular Template
+```bash
+mcp call get_molecular_template
+```
+
+## Acknowledgments
+
+Special thanks to:
+*   **Andrej Karpathy** for his pioneering work and inspiration in the field of AI.
+*   **David Kim** for the [Context Engineering](https://github.com/davidkimai/Context-Engineering) framework, which heavily inspired the architecture of this server.
