@@ -1,27 +1,13 @@
 from mcp.server.fastmcp import FastMCP
+from typing import Dict, Any
+from context_engineering_mcp.templates import PROTOCOL_REGISTRY, PROTOCOL_SHELL_STRUCTURE
 
 # Initialize FastMCP server
 mcp = FastMCP("Context Engineering MCP")
 
 # --- Constants & Templates ---
 
-PROTOCOL_SHELL_STRUCTURE = """
-/protocol.{name}{{
-    intent="{intent}",
-    input={{
-        param1="value1",
-        param2="value2"
-    }},
-    process=[
-        /step1{{action="do something"}},
-        /step2{{action="do something else"}}
-    ],
-    output={{
-        result1="expected output 1",
-        result2="expected output 2"
-    }}
-}}
-"""
+
 
 MOLECULAR_CONTEXT_FUNC = """
 def create_molecular_context(instruction, examples, new_input, format_type="input-output"):
@@ -118,15 +104,83 @@ function solve_math_with_cognitive_tools(problem) {
 
 
 @mcp.tool()
-def get_protocol_shell(intent: str, name: str = "MyProtocol") -> str:
+def get_technique_guide(category: str = "all") -> str:
     """
-    Returns a blank Protocol Shell structure (Module 05) for defining cognitive tools.
+    Returns a guide to available Context Engineering techniques (The Librarian).
+    Use this to discover the best tool for a given task.
 
     Args:
-        intent: The goal or purpose of this protocol.
-        name: The name of the protocol.
+        category: Filter by 'reasoning', 'workflow', 'code', 'project', or 'all'.
     """
-    return PROTOCOL_SHELL_STRUCTURE.format(name=name, intent=intent)
+    guide = """
+    # Context Engineering Technique Guide
+
+    | Category | Tool | Complexity | Best For |
+    |----------|------|------------|----------|
+    | **Reasoning** | `reasoning.systematic` | High | Complex problems requiring step-by-step logic. |
+    | **Reasoning** | `thinking.extended` | Very High | Deep exploration, trade-off analysis, simulation. |
+    | **Workflow** | `workflow.test_driven` | High | Implementing features with TDD. |
+    | **Code** | `code.analyze` | Medium | Understanding code structure and quality. |
+    | **Project** | `project.explore` | Medium | Mapping a new codebase. |
+    | **Basic** | `Standard Molecule` | Low | Simple pattern matching (use `get_molecular_template`). |
+
+    **Usage:**
+    Call `get_protocol_shell(name="<Tool Name>")` to retrieve the specific template.
+    """
+    return guide
+
+@mcp.tool()
+def analyze_task_complexity(task_description: str) -> dict:
+    """
+    Analyzes a task to recommend the most efficient tool (The Router).
+
+    Args:
+        task_description: The user's prompt or task.
+    """
+    task = task_description.lower()
+
+    # Heuristic Analysis
+    if any(w in task for w in ["project", "repo", "codebase", "architecture"]):
+        return {
+            "complexity": "Medium",
+            "recommended_tool": "project.explore",
+            "reasoning": "Task involves project-level understanding."
+        }
+    elif any(w in task for w in ["test", "tdd", "verify"]):
+        return {
+            "complexity": "High",
+            "recommended_tool": "workflow.test_driven",
+            "reasoning": "Task involves testing or verification workflows."
+        }
+    elif any(w in task for w in ["analyze", "reason", "think", "solve", "complex"]):
+        return {
+            "complexity": "High",
+            "recommended_tool": "reasoning.systematic",
+            "reasoning": "Task requires structured reasoning."
+        }
+    else:
+        return {
+            "complexity": "Low",
+            "recommended_tool": "Standard Molecule",
+            "reasoning": "Task appears simple. Use a basic prompt or few-shot molecule."
+        }
+
+@mcp.tool()
+def get_protocol_shell(name: str = "MyProtocol", intent: str = None) -> str:
+    """
+    Returns a Protocol Shell. Can return a specific pre-defined template or a blank shell.
+
+    Args:
+        name: The name of the protocol (e.g., 'reasoning.systematic') OR a custom name.
+        intent: (Optional) The intent if creating a custom shell.
+    """
+    # Check if requested name matches a known template
+    if name in PROTOCOL_REGISTRY:
+        return PROTOCOL_REGISTRY[name]
+
+    # Otherwise return generic shell
+    intent_str = intent or "Define your intent here"
+    return PROTOCOL_SHELL_STRUCTURE.format(name=name, intent=intent_str)
 
 
 @mcp.tool()

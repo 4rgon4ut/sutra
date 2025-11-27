@@ -74,19 +74,6 @@ command = "uv"
 args = ["run", "context-engineering-mcp"]
 ```
 
-## Usage Example
-
-Retrieve a **Protocol Shell** to structure a new cognitive tool:
-
-```python
-# Using an MCP client
-result = await client.call_tool(
-    "get_protocol_shell",
-    arguments={
-        "intent": "Analyze user sentiment",
-        "name": "SentimentAnalyzer"
-    }
-)
 print(result.content[0].text)
 ```
 

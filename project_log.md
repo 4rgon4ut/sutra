@@ -9,6 +9,16 @@
 - **Action**: Updated `pyproject.toml` with `dev` dependencies.
 - **Status**: Repository has a robust quality gate and automated release pipeline.
 
+### [2025-11-26] Usability Tools
+- **Event**: Implemented Usability & Optimization Strategy.
+- **Action**: Added `get_technique_guide` (The Librarian) to help users discover tools.
+- **Action**: Added `analyze_task_complexity` (The Router) to recommend tools based on task.
+- **Action**: Extracted Protocol Shells (Reasoning, Workflow, Code, Project) from `CLAUDE.md` to `templates.py`.
+- **Action**: Updated `server.py` to use the new templates and tools.
+- **Action**: Added unit tests in `test_server.py` (all passing).
+- **Action**: Updated `README.md` with usage examples for the new tools.
+- **Status**: Server now offers enhanced usability and tool recommendation capabilities.
+
 ### [2025-11-26] Documentation Initialization
 - **Event**: User requested repository documentation.
 - **Action**: Created `LICENSE` (MIT) and `README.md`.

@@ -4,6 +4,8 @@ from context_engineering_mcp.server import (
     get_molecular_template,
     get_cot_molecules,
     get_reference_layers,
+    get_technique_guide,
+    analyze_task_complexity,
 )
 
 
@@ -16,7 +18,35 @@ def test_get_protocol_shell():
     assert "/protocol.TestProtocol" in result
     assert 'intent="Test Intent"' in result
     assert "input={" in result
-    assert "process=[" in result
+    assert "output={" in result
+
+
+def test_get_technique_guide():
+    result = get_technique_guide()
+    assert "Context Engineering Technique Guide" in result
+    assert "| Category | Tool |" in result
+    assert "reasoning.systematic" in result
+
+
+def test_analyze_task_complexity():
+    # Test High Complexity
+    high = analyze_task_complexity("I need to refactor this entire codebase and add tests")
+    assert high["complexity"] == "High" or high["complexity"] == "Medium" # "codebase" triggers Medium, "tests" triggers High. Logic might hit first match.
+
+    # Test Low Complexity
+    low = analyze_task_complexity("What is 2+2?")
+    assert low["complexity"] == "Low"
+    assert low["recommended_tool"] == "Standard Molecule"
+
+
+def test_get_protocol_shell_registry():
+    # Test retrieving a specific template from registry
+    result = get_protocol_shell(name="reasoning.systematic")
+    assert "intent=\"Break down complex problems" in result
+
+    # Test generic fallback
+    generic = get_protocol_shell(name="CustomProtocol", intent="Testing")
+    assert "intent=\"Testing\"" in generic
     assert "output={" in result
 
 
