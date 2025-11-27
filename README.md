@@ -24,6 +24,18 @@ Or using `pip`:
 pip install .
 ```
 
+### Updating
+
+To update to the latest version of your local copy:
+
+```bash
+uv tool install . --force
+```
+or
+```bash
+pip install . --upgrade
+```
+
 ### Configuration
 
 #### Claude Desktop
@@ -78,26 +90,41 @@ args = ["run", "context-engineering-mcp"]
 *   **The Librarian (`get_technique_guide`)**: Returns a guide to available techniques, helping you or the LLM choose the right tool for the job.
 *   **The Router (`analyze_task_complexity`)**: Analyzes a task description and recommends the most efficient tool (Low/Medium/High complexity).
 
-## Usage Examples
+## Programmatic Usage (Python)
 
-### 1. Discovery (The Librarian)
+You can use the `mcp` library to connect to the server programmatically:
+
+```python
+import asyncio
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+async def main():
+    # 1. Connect to the server
+    server = StdioServerParameters(command="uv", args=["run", "context-engineering-mcp"])
+
+    async with stdio_client(server) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+
+            # 2. Call a tool (Simple & Direct)
+            result = await session.call_tool("get_technique_guide", arguments={})
+            print(result.content[0].text)
+
+            # 3. Get a specific template
+            shell = await session.call_tool("get_protocol_shell", arguments={"name": "code.analyze"})
+            print(shell.content[0].text)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## CLI Usage (via MCP CLI)
+
+If you have the `mcp-cli` installed, you can call tools directly:
+
 ```bash
 mcp call get_technique_guide --arg category="reasoning"
-```
-
-### 2. Auto-Dispatch (The Router)
-```bash
-mcp call analyze_task_complexity --arg task_description="I need to refactor the auth module and add tests"
-```
-
-### 3. Getting a Protocol Shell
-```bash
-mcp call get_protocol_shell --arg name="reasoning.systematic"
-```
-
-### 4. Getting a Molecular Template
-```bash
-mcp call get_molecular_template
 ```
 
 ## Acknowledgments
