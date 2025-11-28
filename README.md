@@ -115,9 +115,20 @@ async def main():
             shell = await session.call_tool("get_protocol_shell", arguments={"name": "code.analyze"})
             print(shell.content[0].text)
 
-if __name__ == "__main__":
-    asyncio.run(main())
 ```
+
+## Troubleshooting
+
+### "The model doesn't see my tools"
+If you are using **Continue** or a similar extension and the model says it can't find the tools:
+1.  **Restart VS Code**: MCP servers often need a restart to register.
+2.  **Check the Logs**: Look at the "Output" tab in VS Code and select "Continue" (or your extension) to see if the server crashed.
+3.  **Be Explicit**: Sometimes the model needs a nudge. Try asking:
+    > "Please call the `get_technique_guide` tool."
+4.  **Check Model Support**: Ensure you are using a model that supports tool calling (e.g., Gemini 1.5 Pro, Claude 3.5 Sonnet).
+
+### "Gemini Code Assist" (Official Extension)
+Note: The official Google Gemini Code Assist extension may have different MCP support than community extensions like Continue. Check the official documentation for how to enable MCP servers.
 
 ## CLI Usage (via MCP CLI)
 
