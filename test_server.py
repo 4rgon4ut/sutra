@@ -30,8 +30,12 @@ def test_get_technique_guide():
 
 def test_analyze_task_complexity():
     # Test High Complexity
-    high = analyze_task_complexity("I need to refactor this entire codebase and add tests")
-    assert high["complexity"] == "High" or high["complexity"] == "Medium" # "codebase" triggers Medium, "tests" triggers High. Logic might hit first match.
+    high = analyze_task_complexity(
+        "I need to refactor this entire codebase and add tests"
+    )
+    assert (
+        high["complexity"] == "High" or high["complexity"] == "Medium"
+    )  # "codebase" triggers Medium, "tests" triggers High. Logic might hit first match.
 
     # Test Low Complexity
     low = analyze_task_complexity("What is 2+2?")
@@ -42,11 +46,11 @@ def test_analyze_task_complexity():
 def test_get_protocol_shell_registry():
     # Test retrieving a specific template from registry
     result = get_protocol_shell(name="reasoning.systematic")
-    assert "intent=\"Break down complex problems" in result
+    assert 'intent="Break down complex problems' in result
 
     # Test generic fallback
     generic = get_protocol_shell(name="CustomProtocol", intent="Testing")
-    assert "intent=\"Testing\"" in generic
+    assert 'intent="Testing"' in generic
     assert "output={" in result
 
 

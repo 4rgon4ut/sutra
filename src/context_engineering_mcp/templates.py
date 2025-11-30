@@ -171,5 +171,5 @@ PROTOCOL_REGISTRY = {
     "thinking.extended": THINKING_EXTENDED,
     "workflow.test_driven": WORKFLOW_TDD,
     "code.analyze": CODE_ANALYZE,
-    "project.explore": PROJECT_EXPLORE
+    "project.explore": PROJECT_EXPLORE,
 }

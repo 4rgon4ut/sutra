@@ -1,11 +1,13 @@
 from mcp.server.fastmcp import FastMCP
-from context_engineering_mcp.templates import PROTOCOL_REGISTRY, PROTOCOL_SHELL_STRUCTURE
+from context_engineering_mcp.templates import (
+    PROTOCOL_REGISTRY,
+    PROTOCOL_SHELL_STRUCTURE,
+)
 
 # Initialize FastMCP server
 mcp = FastMCP("Context Engineering MCP")
 
 # --- Constants & Templates ---
-
 
 
 MOLECULAR_CONTEXT_FUNC = """
@@ -128,6 +130,7 @@ def get_technique_guide(category: str = "all") -> str:
     """
     return guide
 
+
 @mcp.tool()
 def analyze_task_complexity(task_description: str) -> dict:
     """
@@ -143,26 +146,27 @@ def analyze_task_complexity(task_description: str) -> dict:
         return {
             "complexity": "Medium",
             "recommended_tool": "project.explore",
-            "reasoning": "Task involves project-level understanding."
+            "reasoning": "Task involves project-level understanding.",
         }
     elif any(w in task for w in ["test", "tdd", "verify"]):
         return {
             "complexity": "High",
             "recommended_tool": "workflow.test_driven",
-            "reasoning": "Task involves testing or verification workflows."
+            "reasoning": "Task involves testing or verification workflows.",
         }
     elif any(w in task for w in ["analyze", "reason", "think", "solve", "complex"]):
         return {
             "complexity": "High",
             "recommended_tool": "reasoning.systematic",
-            "reasoning": "Task requires structured reasoning."
+            "reasoning": "Task requires structured reasoning.",
         }
     else:
         return {
             "complexity": "Low",
             "recommended_tool": "Standard Molecule",
-            "reasoning": "Task appears simple. Use a basic prompt or few-shot molecule."
+            "reasoning": "Task appears simple. Use a basic prompt or few-shot molecule.",
         }
+
 
 @mcp.tool()
 def get_protocol_shell(name: str = "MyProtocol", intent: str = None) -> str:
