@@ -1,5 +1,4 @@
 from mcp.server.fastmcp import FastMCP
-from typing import Dict, Any
 from context_engineering_mcp.templates import PROTOCOL_REGISTRY, PROTOCOL_SHELL_STRUCTURE
 
 # Initialize FastMCP server
