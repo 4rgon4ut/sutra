@@ -1,105 +1,18 @@
 from mcp.server.fastmcp import FastMCP
-from context_engineering_mcp.templates import (
-    PROTOCOL_REGISTRY,
-    PROTOCOL_SHELL_STRUCTURE,
+
+from context_engineering_mcp.cognitive import register_thinking_models
+from context_engineering_mcp.core import (
+    MOLECULAR_CONTEXT_FUNC,
+    format_protocol_shell,
+    get_program_template,
+    get_protocol_template,
 )
 
 # Initialize FastMCP server
 mcp = FastMCP("Context Engineering MCP")
 
-# --- Constants & Templates ---
-
-
-MOLECULAR_CONTEXT_FUNC = """
-def create_molecular_context(instruction, examples, new_input, format_type="input-output"):
-    \"\"\"
-    Construct a molecular context from examples (Module 02).
-
-    Args:
-        instruction (str): The task instruction
-        examples (List[Dict]): List of example input/output pairs
-        new_input (str): The new input to process
-        format_type (str): Template type (input-output, chain-of-thought)
-
-    Returns:
-        str: The complete molecular context
-    \"\"\"
-    context = f"{instruction}\\n\\n"
-
-    # Add examples based on format type
-    if format_type == "input-output":
-        for example in examples:
-            context += f"Input: {example['input']}\\n"
-            context += f"Output: {example['output']}\\n\\n"
-    elif format_type == "chain-of-thought":
-        for example in examples:
-            context += f"Input: {example['input']}\\n"
-            context += f"Thinking: {example['thinking']}\\n"
-            context += f"Output: {example['output']}\\n\\n"
-
-    # Add the new input
-    context += f"Input: {new_input}\\nOutput:"
-
-    return context
-"""
-
-PROMPT_PROGRAM_MATH_TEMPLATE = """
-// Prompt Program: Math Solver (Module 07)
-
-function understand_math_problem(problem) {
-  return `
-    Task: Analyze this math problem thoroughly before solving.
-    Problem: ${problem}
-    Please provide:
-    1. What type of math problem is this?
-    2. What are the key variables or unknowns?
-    3. What are the given values or constraints?
-    4. What formulas or methods will be relevant?
-  `;
-}
-
-function plan_solution_steps(problem_analysis) {
-  return `
-    Task: Create a step-by-step plan to solve this math problem.
-    Problem Analysis: ${problem_analysis}
-    Please outline a specific sequence of steps to solve this problem.
-  `;
-}
-
-function execute_solution(problem, solution_plan) {
-  return `
-    Task: Solve this math problem following the provided plan.
-    Problem: ${problem}
-    Solution Plan: ${solution_plan}
-    Please show all work for each step.
-  `;
-}
-
-function verify_solution(problem, solution) {
-  return `
-    Task: Verify the correctness of this math solution.
-    Original Problem: ${problem}
-    Proposed Solution: ${solution}
-    Please check calculations and logic.
-  `;
-}
-
-// Main problem-solving function
-function solve_math_with_cognitive_tools(problem) {
-  problem_analysis = LLM(understand_math_problem(problem));
-  solution_plan = LLM(plan_solution_steps(problem_analysis));
-  detailed_solution = LLM(execute_solution(problem, solution_plan));
-  verification = LLM(verify_solution(problem, detailed_solution));
-
-  return {
-    original_problem: problem,
-    analysis: problem_analysis,
-    plan: solution_plan,
-    solution: detailed_solution,
-    verification: verification
-  };
-}
-"""
+# Register cognitive tools
+register_thinking_models(mcp)
 
 # --- Tools ---
 
@@ -169,7 +82,7 @@ def analyze_task_complexity(task_description: str) -> dict:
 
 
 @mcp.tool()
-def get_protocol_shell(name: str = "MyProtocol", intent: str = None) -> str:
+def get_protocol_shell(name: str = "MyProtocol", intent: str | None = None) -> str:
     """
     Returns a Protocol Shell. Can return a specific pre-defined template or a blank shell.
 
@@ -177,13 +90,12 @@ def get_protocol_shell(name: str = "MyProtocol", intent: str = None) -> str:
         name: The name of the protocol (e.g., 'reasoning.systematic') OR a custom name.
         intent: (Optional) The intent if creating a custom shell.
     """
-    # Check if requested name matches a known template
-    if name in PROTOCOL_REGISTRY:
-        return PROTOCOL_REGISTRY[name]
+    template = get_protocol_template(name)
+    if template:
+        return template
 
-    # Otherwise return generic shell
     intent_str = intent or "Define your intent here"
-    return PROTOCOL_SHELL_STRUCTURE.format(name=name, intent=intent_str)
+    return format_protocol_shell(name=name, intent=intent_str)
 
 
 @mcp.tool()
@@ -203,13 +115,7 @@ def get_prompt_program(program_type: str = "math") -> str:
     Args:
         program_type: The type of program (currently supports 'math').
     """
-    if program_type == "math":
-        return PROMPT_PROGRAM_MATH_TEMPLATE
-    else:
-        return (
-            f"// Program type '{program_type}' not yet implemented. Returning generic structure.\\n"
-            + PROMPT_PROGRAM_MATH_TEMPLATE
-        )
+    return get_program_template(program_type)
 
 
 # --- Resources ---
