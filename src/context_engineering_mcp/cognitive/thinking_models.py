@@ -136,28 +136,28 @@ def register_thinking_models(mcp: FastMCP) -> None:
         normalized_constraints = constraints or "<none>"
 
         template = """
-/reasoning.backtracking{
+/reasoning.backtracking{{
     intent="Recover from failure by stepping back, exploring alternatives, and re-planning",
-    input={
+    input={{
         objective="{objective}",
         failed_step="{failed_step}",
         trace="{trace}",
         constraints="{constraints}"
-    },
+    }},
     process=[
-        /locate_break{action="Identify point of failure and prior valid state"},
-        /hypothesize{action="List alternative branches with pros/cons"},
-        /test_branch{action="Mentally simulate top alternatives against constraints"},
-        /select{action="Choose next branch with rationale"},
-        /plan_forward{action="Lay out next steps with checkpoints"}
+        /locate_break{{action="Identify point of failure and prior valid state"}},
+        /hypothesize{{action="List alternative branches with pros/cons"}},
+        /test_branch{{action="Mentally simulate top alternatives against constraints"}},
+        /select{{action="Choose next branch with rationale"}},
+        /plan_forward{{action="Lay out next steps with checkpoints"}}
     ],
-    output={
+    output={{
         recovery_plan="Steps to proceed from stable state",
         branch_rationale="Why this branch was chosen",
         risks="Remaining risks or unknowns",
         checkpoints="Where to re-verify along the way"
-    }
-}
+    }}
+}}
 """
         return template.format(
             objective=objective,
@@ -187,26 +187,26 @@ def register_thinking_models(mcp: FastMCP) -> None:
         normalized_goal = goal or "<general>"
 
         template = """
-/symbolic.abstract{
+/symbolic.abstract{{
     intent="Abstract concrete tokens into symbolic variables to enable general reasoning",
-    input={
+    input={{
         expression="{expression}",
         mapping_hint="{mapping_hint}",
         goal="{goal}"
-    },
+    }},
     process=[
-        /tokenize{action="Identify meaningful tokens/entities in the expression"},
-        /assign_symbols{action="Map tokens to abstract symbols with reversible table"},
-        /restatement{action="Restate the problem using only symbols"},
-        /constraints{action="Preserve constraints or relationships between symbols"}
+        /tokenize{{action="Identify meaningful tokens/entities in the expression"}},
+        /assign_symbols{{action="Map tokens to abstract symbols with reversible table"}},
+        /restatement{{action="Restate the problem using only symbols"}},
+        /constraints{{action="Preserve constraints or relationships between symbols"}}
     ],
-    output={
+    output={{
         abstract_form="Symbolic restatement of the expression/problem",
         symbol_table="Mapping of symbols -> original tokens",
         invariants="Constraints/relations maintained in abstraction",
         next_steps="How to use the abstraction for the stated goal"
-    }
-}
+    }}
+}}
 """
         return template.format(
             expression=expression,

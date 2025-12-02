@@ -121,15 +121,62 @@ def test_thinking_models_tools_render():
     dummy = DummyMCP()
     register_thinking_models(dummy)
 
+    # Verify all four tools are registered
+    assert "understand_question" in dummy.tools
+    assert "verify_logic" in dummy.tools
     assert "backtracking" in dummy.tools
     assert "symbolic_abstract" in dummy.tools
 
+    # Test understand_question
+    understand = dummy.tools["understand_question"](
+        "How do I implement authentication?",
+        context="Building a web app",
+        constraints="Must be secure"
+    )
+    assert "/reasoning.understand_question" in understand
+    assert "intent_map" in understand
+    assert "constraints" in understand
+    assert "clarifications" in understand
+
+    # Test verify_logic
+    verify = dummy.tools["verify_logic"](
+        claim="The system is secure",
+        reasoning_trace="Step 1: Added auth. Step 2: Added HTTPS.",
+        constraints="Must prevent XSS and CSRF"
+    )
+    assert "/reasoning.verify_logic" in verify
+    assert "premise_check" in verify
+    assert "defect_log" in verify
+    assert "verdict" in verify
+
+    # Test backtracking
     backtrack = dummy.tools["backtracking"](
         "reach objective", "failed step", trace="trace log", constraints="none"
     )
     assert "/reasoning.backtracking" in backtrack
     assert "recovery_plan" in backtrack
 
+    # Test symbolic_abstract
     symbolic = dummy.tools["symbolic_abstract"]("x+1=2", mapping_hint="x->var", goal="solve")
     assert "/symbolic.abstract" in symbolic
     assert "symbol_table" in symbolic
+
+
+def test_cell_protocol_windowed():
+    """Test windowed cell protocol retrieval."""
+    from context_engineering_mcp.server import get_cell_protocol
+
+    windowed = get_cell_protocol("cell.protocol.windowed")
+    assert "cell.protocol.windowed" in windowed
+    assert "max_length" in windowed
+    assert "fifo" in windowed.lower() or "recency" in windowed
+
+
+def test_cell_protocol_episodic():
+    """Test episodic cell protocol retrieval."""
+    from context_engineering_mcp.server import get_cell_protocol
+
+    episodic = get_cell_protocol("cell.protocol.episodic")
+    assert "cell.protocol.episodic" in episodic
+    assert "episode" in episodic
+    assert "retrieval" in episodic or "log" in episodic
