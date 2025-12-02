@@ -8,26 +8,6 @@ A Model Context Protocol (MCP) server providing structured prompting templates, 
 *   **Protocols**: Structured reasoning shells defined by Intent, Input, Process, and Output.
 *   **Fields**: Primitives for neural field context persistence and resonance.
 
-## TODO / WIP
-
-**Done**
-- MCP server exposing template registry for molecules, protocols, and neural field primitives.
-- Librarian (`get_technique_guide`) and Router (`analyze_task_complexity`) for tool discovery and selection.
-- Protocol shell retrieval for reasoning, workflow, project, and code analysis templates.
-- Molecular context builder plus math prompt program utility.
-- Context resources: CoT molecules, layer reference, and resonance field primitives.
-
-**Upcoming**
-- [ ] Context sqeezing/pruning/sumarization
-- [ ] Interactive context build-up
-- [ ] Semantic Chunking
-- [ ] Check interaction and not to overlap existing popular tools functionality (like memory mcp, sequential thinking)
-- [ ] HALLUCINATION REDUCTION STRATEGIES
-- [ ] Token/Quality rate
-- [ ] Layered memory organization in interactive context building
-- [ ] create preconfigured roles templates like orchestrator --> shared_context manager --> specialist_1, specialist_2, ...
-- [ ] One of the most powerful organ patterns is ReAct (Reasoning + Acting): thought --> action --> observation; continue loop
-
 ## Installation & Configuration
 
 ### Installation

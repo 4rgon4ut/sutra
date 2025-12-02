@@ -12,3 +12,5 @@ __pycache__/
 venv/
 
 .context/
+.digest.txt
+.journal.md
