@@ -111,7 +111,7 @@ def test_thinking_models_tools_render():
 
     class DummyMCP:
         def __init__(self) -> None:
-            self.tools = {}
+            self.tools: dict[str, object] = {}
 
         def tool(self):
             def decorator(func):
