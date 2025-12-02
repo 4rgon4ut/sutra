@@ -133,9 +133,7 @@ def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
         return template
 
     available = ", ".join(sorted(CELL_PROTOCOL_REGISTRY.keys()))
-    return (
-        f"// Cell protocol '{name}' not found. Available protocols: {available}"
-    )
+    return f"// Cell protocol '{name}' not found. Available protocols: {available}"
 
 
 # --- Resources ---
