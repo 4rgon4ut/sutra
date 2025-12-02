@@ -1,7 +1,7 @@
 """Cognitive thinking models and reasoning templates.
 
-These tools generate structured prompts that enforce intent clarification and
-logic verification before executing downstream actions.
+These tools generate structured prompts that enforce intent clarification,
+logic verification, and correction via diverse thinking patterns.
 """
 
 from typing import Optional
@@ -111,6 +111,107 @@ def register_thinking_models(mcp: FastMCP) -> None:
             claim=claim,
             reasoning_trace=reasoning_trace,
             constraints=normalized_constraints,
+        )
+
+    @mcp.tool()
+    def backtracking(
+        objective: str,
+        failed_step: str,
+        trace: Optional[str] = None,
+        constraints: Optional[str] = None,
+    ) -> str:
+        """Produce a recursive backtracking scaffold for error correction.
+
+        Args:
+            objective: Overall goal to satisfy.
+            failed_step: The step or subgoal that failed.
+            trace: Optional reasoning trace leading to the failure.
+            constraints: Guardrails or requirements to respect.
+
+        Returns:
+            Structured prompt that rewinds to last stable state, explores
+            alternatives, and proposes a patched plan.
+        """
+        normalized_trace = trace or "<none>"
+        normalized_constraints = constraints or "<none>"
+
+        template = """
+/reasoning.backtracking{
+    intent="Recover from failure by stepping back, exploring alternatives, and re-planning",
+    input={
+        objective="{objective}",
+        failed_step="{failed_step}",
+        trace="{trace}",
+        constraints="{constraints}"
+    },
+    process=[
+        /locate_break{action="Identify point of failure and prior valid state"},
+        /hypothesize{action="List alternative branches with pros/cons"},
+        /test_branch{action="Mentally simulate top alternatives against constraints"},
+        /select{action="Choose next branch with rationale"},
+        /plan_forward{action="Lay out next steps with checkpoints"}
+    ],
+    output={
+        recovery_plan="Steps to proceed from stable state",
+        branch_rationale="Why this branch was chosen",
+        risks="Remaining risks or unknowns",
+        checkpoints="Where to re-verify along the way"
+    }
+}
+"""
+        return template.format(
+            objective=objective,
+            failed_step=failed_step,
+            trace=normalized_trace,
+            constraints=normalized_constraints,
+        )
+
+    @mcp.tool()
+    def symbolic_abstract(
+        expression: str,
+        mapping_hint: Optional[str] = None,
+        goal: Optional[str] = None,
+    ) -> str:
+        """Convert a concrete expression into abstract variables for reasoning.
+
+        Args:
+            expression: The raw text or equation to abstract.
+            mapping_hint: Optional guidance for token-to-symbol mapping.
+            goal: Optional downstream task (e.g., simplify, prove, generalize).
+
+        Returns:
+            Structured prompt that maps tokens to symbols, restates the problem
+            abstractly, and provides a reversible mapping table.
+        """
+        normalized_hint = mapping_hint or "<none>"
+        normalized_goal = goal or "<general>"
+
+        template = """
+/symbolic.abstract{
+    intent="Abstract concrete tokens into symbolic variables to enable general reasoning",
+    input={
+        expression="{expression}",
+        mapping_hint="{mapping_hint}",
+        goal="{goal}"
+    },
+    process=[
+        /tokenize{action="Identify meaningful tokens/entities in the expression"},
+        /assign_symbols{action="Map tokens to abstract symbols with reversible table"},
+        /restatement{action="Restate the problem using only symbols"},
+        /constraints{action="Preserve constraints or relationships between symbols"}
+    ],
+    output={
+        abstract_form="Symbolic restatement of the expression/problem",
+        symbol_table="Mapping of symbols -> original tokens",
+        invariants="Constraints/relations maintained in abstraction",
+        next_steps="How to use the abstraction for the stated goal"
+    }
+}
+"""
+        return template.format(
+            expression=expression,
+            mapping_hint=normalized_hint,
+            goal=normalized_goal,
         )
 
 

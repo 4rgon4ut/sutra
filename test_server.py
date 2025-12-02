@@ -89,3 +89,15 @@ def test_resources():
     assert "# Context Engineering Layers" in layers
     assert "1. Atoms" in layers
     assert "5. Systems" in layers
+
+
+def test_get_cell_protocol():
+    """Test cell protocol retrieval."""
+    from context_engineering_mcp.server import get_cell_protocol
+
+    key_value = get_cell_protocol("cell.protocol.key_value")
+    assert "cell.protocol.key_value" in key_value
+    assert "new_state" in key_value
+
+    missing = get_cell_protocol("cell.protocol.unknown")
+    assert "not found" in missing

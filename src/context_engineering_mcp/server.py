@@ -2,8 +2,10 @@ from mcp.server.fastmcp import FastMCP
 
 from context_engineering_mcp.cognitive import register_thinking_models
 from context_engineering_mcp.core import (
+    CELL_PROTOCOL_REGISTRY,
     MOLECULAR_CONTEXT_FUNC,
     format_protocol_shell,
+    get_cell_protocol_template,
     get_program_template,
     get_protocol_template,
 )
@@ -116,6 +118,24 @@ def get_prompt_program(program_type: str = "math") -> str:
         program_type: The type of program (currently supports 'math').
     """
     return get_program_template(program_type)
+
+
+@mcp.tool()
+def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
+    """
+    Returns a cell protocol template describing memory behaviors.
+
+    Args:
+        name: Identifier of the cell protocol (key_value, windowed, episodic).
+    """
+    template = get_cell_protocol_template(name)
+    if template:
+        return template
+
+    available = ", ".join(sorted(CELL_PROTOCOL_REGISTRY.keys()))
+    return (
+        f"// Cell protocol '{name}' not found. Available protocols: {available}"
+    )
 
 
 # --- Resources ---
