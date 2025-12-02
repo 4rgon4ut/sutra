@@ -105,7 +105,9 @@ def test_get_cell_protocol():
 
 def test_thinking_models_tools_render():
     """Ensure thinking model tools register and render expected content without FastMCP."""
-    from context_engineering_mcp.cognitive.thinking_models import register_thinking_models
+    from context_engineering_mcp.cognitive.thinking_models import (
+        register_thinking_models,
+    )
 
     class DummyMCP:
         def __init__(self) -> None:
@@ -131,7 +133,7 @@ def test_thinking_models_tools_render():
     understand = dummy.tools["understand_question"](
         "How do I implement authentication?",
         context="Building a web app",
-        constraints="Must be secure"
+        constraints="Must be secure",
     )
     assert "/reasoning.understand_question" in understand
     assert "intent_map" in understand
@@ -142,7 +144,7 @@ def test_thinking_models_tools_render():
     verify = dummy.tools["verify_logic"](
         claim="The system is secure",
         reasoning_trace="Step 1: Added auth. Step 2: Added HTTPS.",
-        constraints="Must prevent XSS and CSRF"
+        constraints="Must prevent XSS and CSRF",
     )
     assert "/reasoning.verify_logic" in verify
     assert "premise_check" in verify
@@ -157,7 +159,9 @@ def test_thinking_models_tools_render():
     assert "recovery_plan" in backtrack
 
     # Test symbolic_abstract
-    symbolic = dummy.tools["symbolic_abstract"]("x+1=2", mapping_hint="x->var", goal="solve")
+    symbolic = dummy.tools["symbolic_abstract"](
+        "x+1=2", mapping_hint="x->var", goal="solve"
+    )
     assert "/symbolic.abstract" in symbolic
     assert "symbol_table" in symbolic
 
