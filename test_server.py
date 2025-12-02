@@ -101,3 +101,35 @@ def test_get_cell_protocol():
 
     missing = get_cell_protocol("cell.protocol.unknown")
     assert "not found" in missing
+
+
+def test_thinking_models_tools_render():
+    """Ensure thinking model tools register and render expected content without FastMCP."""
+    from context_engineering_mcp.cognitive.thinking_models import register_thinking_models
+
+    class DummyMCP:
+        def __init__(self) -> None:
+            self.tools = {}
+
+        def tool(self):
+            def decorator(func):
+                self.tools[func.__name__] = func
+                return func
+
+            return decorator
+
+    dummy = DummyMCP()
+    register_thinking_models(dummy)
+
+    assert "backtracking" in dummy.tools
+    assert "symbolic_abstract" in dummy.tools
+
+    backtrack = dummy.tools["backtracking"](
+        "reach objective", "failed step", trace="trace log", constraints="none"
+    )
+    assert "/reasoning.backtracking" in backtrack
+    assert "recovery_plan" in backtrack
+
+    symbolic = dummy.tools["symbolic_abstract"]("x+1=2", mapping_hint="x->var", goal="solve")
+    assert "/symbolic.abstract" in symbolic
+    assert "symbol_table" in symbolic
