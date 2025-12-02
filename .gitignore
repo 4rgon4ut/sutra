@@ -14,3 +14,4 @@ venv/
 .context/
 .digest.txt
 .journal.md
+.serena/
