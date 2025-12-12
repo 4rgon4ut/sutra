@@ -6,6 +6,7 @@ from context_engineering_mcp.server import (
     get_reference_layers,
     get_technique_guide,
     analyze_task_complexity,
+    get_organ,
 )
 
 
@@ -61,6 +62,18 @@ def test_get_prompt_program_math():
     assert "// Prompt Program: Math Solver" in result
     assert "function understand_math_problem" in result
     assert "function solve_math_with_cognitive_tools" in result
+
+
+def test_get_prompt_program_debate():
+    """Test that debate prompt program returns correct template."""
+    result = get_prompt_program(program_type="debate")
+
+    assert "// Prompt Program: Multi-Perspective Debate" in result
+    assert "function frame_debate_question" in result
+    assert "function generate_perspective" in result
+    assert "function conduct_debate_round" in result
+    assert "function synthesize_debate" in result
+    assert "function run_multi_perspective_debate" in result
 
 
 def test_get_prompt_program_unknown():
@@ -184,3 +197,23 @@ def test_cell_protocol_episodic():
     assert "cell.protocol.episodic" in episodic
     assert "episode" in episodic
     assert "retrieval" in episodic or "log" in episodic
+
+
+def test_get_organ_debate_council():
+    """Test debate_council organ retrieval."""
+    result = get_organ("debate_council")
+
+    assert "/organ.debate_council" in result
+    assert "multi-perspective" in result.lower() or "debate" in result.lower()
+    assert "moderator" in result.lower() or "phase.moderator" in result
+    assert "perspectives" in result.lower()
+    assert "synthesis" in result.lower()
+
+
+def test_get_organ_unknown():
+    """Test unknown organ returns helpful error with example."""
+    result = get_organ("unknown_organ")
+
+    assert "not found" in result.lower()
+    assert "debate_council" in result
+    assert "/organ.debate_council" in result  # Should include example

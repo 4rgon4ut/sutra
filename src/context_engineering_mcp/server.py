@@ -9,6 +9,7 @@ from context_engineering_mcp.core import (
     get_program_template,
     get_protocol_template,
 )
+from context_engineering_mcp.systems import get_organ_template
 
 # Initialize FastMCP server
 mcp = FastMCP("Context Engineering MCP")
@@ -115,7 +116,7 @@ def get_prompt_program(program_type: str = "math") -> str:
     Returns a functional pseudo-code prompt template (Module 07).
 
     Args:
-        program_type: The type of program (currently supports 'math').
+        program_type: The type of program ('math', 'debate').
     """
     return get_program_template(program_type)
 
@@ -134,6 +135,20 @@ def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
 
     available = ", ".join(sorted(CELL_PROTOCOL_REGISTRY.keys()))
     return f"// Cell protocol '{name}' not found. Available protocols: {available}"
+
+
+@mcp.tool()
+def get_organ(name: str = "debate_council") -> str:
+    """
+    Returns an organ template for multi-agent orchestration (Layer 4).
+
+    Organs combine programs and cells into cohesive workflows for complex tasks
+    requiring multi-perspective analysis or collaborative reasoning.
+
+    Args:
+        name: Identifier of the organ ('debate_council' for multi-perspective debate).
+    """
+    return get_organ_template(name)
 
 
 # --- Resources ---
