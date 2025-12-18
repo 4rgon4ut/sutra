@@ -7,6 +7,32 @@ logic verification, and correction via diverse thinking patterns.
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
+from pydantic import BaseModel, Field, ValidationError
+
+
+class UnderstandQuestionInput(BaseModel):
+    question: str = Field(..., min_length=3, description="The raw user ask to unpack.")
+    context: Optional[str] = Field(None, description="Optional background knowledge.")
+    constraints: Optional[str] = Field(None, description="Explicit limits or success criteria.")
+
+
+class VerifyLogicInput(BaseModel):
+    claim: str = Field(..., min_length=3, description="The headline answer or assertion to validate.")
+    reasoning_trace: str = Field(..., min_length=10, description="The supporting chain-of-thought.")
+    constraints: Optional[str] = Field(None, description="Optional guardrails.")
+
+
+class BacktrackingInput(BaseModel):
+    objective: str = Field(..., min_length=3, description="Overall goal to satisfy.")
+    failed_step: str = Field(..., min_length=3, description="The step or subgoal that failed.")
+    trace: Optional[str] = Field(None, description="Optional reasoning trace leading to the failure.")
+    constraints: Optional[str] = Field(None, description="Guardrails or requirements.")
+
+
+class SymbolicAbstractInput(BaseModel):
+    expression: str = Field(..., min_length=1, description="The raw text or equation to abstract.")
+    mapping_hint: Optional[str] = Field(None, description="Optional guidance for token-to-symbol mapping.")
+    goal: Optional[str] = Field(None, description="Optional downstream task.")
 
 
 def register_thinking_models(mcp: FastMCP) -> None:
@@ -33,9 +59,16 @@ def register_thinking_models(mcp: FastMCP) -> None:
             A structured prompt guiding the model to restate intent, surface
             constraints, and prepare clarifying questions before acting.
         """
+        # Validate input using Pydantic
+        try:
+            model = UnderstandQuestionInput(
+                question=question, context=context, constraints=constraints
+            )
+        except ValidationError as e:
+            return f"Input Validation Error: {e}"
 
-        normalized_context = context or "<none>"
-        normalized_constraints = constraints or "<none>"
+        normalized_context = model.context or "<none>"
+        normalized_constraints = model.constraints or "<none>"
 
         template = """
 /reasoning.understand_question{{
@@ -60,7 +93,7 @@ def register_thinking_models(mcp: FastMCP) -> None:
 }}
 """
         return template.format(
-            question=question,
+            question=model.question,
             context=normalized_context,
             constraints=normalized_constraints,
         )
@@ -82,7 +115,14 @@ def register_thinking_models(mcp: FastMCP) -> None:
             Structured prompt that audits assumptions, inference steps, and
             evidence, then proposes patches for any defects.
         """
-        normalized_constraints = constraints or "<none>"
+        try:
+            model = VerifyLogicInput(
+                claim=claim, reasoning_trace=reasoning_trace, constraints=constraints
+            )
+        except ValidationError as e:
+            return f"Input Validation Error: {e}"
+
+        normalized_constraints = model.constraints or "<none>"
 
         template = """
 /reasoning.verify_logic{{
@@ -108,8 +148,8 @@ def register_thinking_models(mcp: FastMCP) -> None:
 }}
 """
         return template.format(
-            claim=claim,
-            reasoning_trace=reasoning_trace,
+            claim=model.claim,
+            reasoning_trace=model.reasoning_trace,
             constraints=normalized_constraints,
         )
 
@@ -132,8 +172,18 @@ def register_thinking_models(mcp: FastMCP) -> None:
             Structured prompt that rewinds to last stable state, explores
             alternatives, and proposes a patched plan.
         """
-        normalized_trace = trace or "<none>"
-        normalized_constraints = constraints or "<none>"
+        try:
+            model = BacktrackingInput(
+                objective=objective,
+                failed_step=failed_step,
+                trace=trace,
+                constraints=constraints,
+            )
+        except ValidationError as e:
+            return f"Input Validation Error: {e}"
+
+        normalized_trace = model.trace or "<none>"
+        normalized_constraints = model.constraints or "<none>"
 
         template = """
 /reasoning.backtracking{{
@@ -160,8 +210,8 @@ def register_thinking_models(mcp: FastMCP) -> None:
 }}
 """
         return template.format(
-            objective=objective,
-            failed_step=failed_step,
+            objective=model.objective,
+            failed_step=model.failed_step,
             trace=normalized_trace,
             constraints=normalized_constraints,
         )
@@ -183,8 +233,15 @@ def register_thinking_models(mcp: FastMCP) -> None:
             Structured prompt that maps tokens to symbols, restates the problem
             abstractly, and provides a reversible mapping table.
         """
-        normalized_hint = mapping_hint or "<none>"
-        normalized_goal = goal or "<general>"
+        try:
+            model = SymbolicAbstractInput(
+                expression=expression, mapping_hint=mapping_hint, goal=goal
+            )
+        except ValidationError as e:
+            return f"Input Validation Error: {e}"
+
+        normalized_hint = model.mapping_hint or "<none>"
+        normalized_goal = model.goal or "<general>"
 
         template = """
 /symbolic.abstract{{
@@ -209,7 +266,7 @@ def register_thinking_models(mcp: FastMCP) -> None:
 }}
 """
         return template.format(
-            expression=expression,
+            expression=model.expression,
             mapping_hint=normalized_hint,
             goal=normalized_goal,
         )
