@@ -173,6 +173,79 @@ ORGAN_RESEARCH_SYNTHESIS: Final[str] = """
 }}
 """
 
+ORGAN_TOOL_MASTER: Final[str] = """
+/organ.tool_master{{
+    intent="Expertly manage and execute MCP tools to minimize token usage for client agents",
+
+    input={{
+        intent="<high_level_goal>",
+        task_type="<architect|research|reasoning|code>",
+        constraints="<optional_constraints>"
+    }},
+
+    architecture={{
+        pattern="router → executor → distiller",
+        components=[
+            "Router Cell: Maps intent to the optimal Sutra tool (Architect/Librarian/Router/Thinker)",
+            "Executor Cell: Holds API specs and constructs precise, valid tool calls",
+            "Distiller Cell: Filters verbose tool output into high-signal artifacts"
+        ]
+    }},
+
+    process=[
+        /phase.router{{
+            role="Select Tool",
+            actions=[
+                "Analyze intent against Tool Registry",
+                "Select: 'design_context_architecture' for system building",
+                "Select: 'analyze_task_complexity' for quick triage",
+                "Select: 'get_protocol_shell' for raw templates",
+                "Select: 'reasoning.*' for logic checks"
+            ],
+            output="selected_tool_spec"
+        }},
+
+        /phase.executor{{
+            role="Execute Tool",
+            actions=[
+                "Construct valid JSON arguments based on selected tool schema",
+                "Execute tool call",
+                "Handle any immediate validation errors (retry logic)"
+            ],
+            output="raw_tool_output"
+        }},
+
+        /phase.distiller{{
+            role="Extract Signal",
+            actions=[
+                "Parse raw JSON output",
+                "Discard metadata/boilerplate if not requested",
+                "Extract core artifact (e.g., the specific protocol string)",
+                "Format as concise confirmation or artifact block"
+            ],
+            output="high_signal_result"
+        }}
+    ],
+
+    output={{
+        tool_used="Name of tool executed",
+        artifact="The actual result (blueprint/protocol/verification)",
+        savings="Estimated token savings vs raw exploration"
+    }},
+
+    meta={{
+        organ_type="utility_optimization",
+        layer="organs",
+        complexity="low",
+        use_cases=[
+            "Agent-to-Agent delegation",
+            "Automated system construction",
+            "Low-overhead tool usage"
+        ]
+    }}
+}}
+"""
+
 
 def get_organ_template(organ_name: str) -> str:
     """Return an organ template for orchestrating multi-agent workflows.
@@ -195,8 +268,12 @@ def get_organ_template(organ_name: str) -> str:
     if normalized_name in ["researchsynthesis", "research", "scoutarchitectscribe"]:
         return ORGAN_RESEARCH_SYNTHESIS
 
+    # Match tool_master variants
+    if normalized_name in ["toolmaster", "tool", "master", "meta"]:
+        return ORGAN_TOOL_MASTER
+
     # Return helpful error for unknown organs
-    available = ["debate_council", "research_synthesis"]
+    available = ["debate_council", "research_synthesis", "tool_master"]
     return (
         f"// Organ '{organ_name}' not found.\\n"
         f"// Available organs: {', '.join(available)}\\n"
@@ -207,5 +284,6 @@ def get_organ_template(organ_name: str) -> str:
 __all__ = [
     "ORGAN_DEBATE_COUNCIL",
     "ORGAN_RESEARCH_SYNTHESIS",
+    "ORGAN_TOOL_MASTER",
     "get_organ_template",
 ]

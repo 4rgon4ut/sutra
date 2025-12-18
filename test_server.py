@@ -244,6 +244,16 @@ def test_get_organ_research_synthesis():
     assert "scribe" in result.lower()
 
 
+def test_get_organ_tool_master():
+    """Test tool_master organ retrieval."""
+    result = get_organ("tool_master")
+
+    assert "/organ.tool_master" in result
+    assert "router" in result.lower()
+    assert "executor" in result.lower()
+    assert "distiller" in result.lower()
+
+
 def test_get_organ_unknown():
     """Test unknown organ returns helpful error with example."""
     result = get_organ("unknown_organ")
