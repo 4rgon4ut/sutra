@@ -4,7 +4,7 @@
 
 Sutra is a Model Context Protocol (MCP) server that transforms how LLMs handle reasoning, memory, and orchestration. It provides a "Standard Library" of cognitive tools (Thinking Models), memory structures (Cells), and multi-agent patterns (Organs).
 
-## 🚀 Installation
+## Installation
 
 ### Using `uv` (Recommended)
 ```bash
@@ -16,7 +16,7 @@ uv tool install context-engineering-mcp
 pip install context-engineering-mcp
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Claude Desktop
 Add to your `claude_desktop_config.json`:
@@ -37,7 +37,7 @@ Add to your MCP settings:
 - **Command**: `uv`
 - **Args**: `tool run context-engineering-mcp`
 
-## 🧠 Core Features (v0.1.0)
+## Core Features (v0.1.0)
 
 ### 1. The Gateway (Router)
 Sutra automatically analyzes your request to decide the best strategy:
@@ -53,7 +53,7 @@ Generates blueprints for custom agents, combining:
 ### 3. The Librarian
 A manual discovery tool (`get_technique_guide`) that lets you or the agent browse the full catalog of Context Engineering techniques.
 
-## 🛠️ Development
+## Development
 
 **Requirements**: Python 3.10+, `uv` (optional but recommended).
 
@@ -73,5 +73,5 @@ A manual discovery tool (`get_technique_guide`) that lets you or the agent brows
    pytest
    ```
 
-## 📄 License
+## License
 MIT
