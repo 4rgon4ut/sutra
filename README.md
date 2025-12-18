@@ -1,6 +1,6 @@
 # Sutra
 
-**The Context Engineering Engine for MCP**
+**The MCP Context Engineering Engine**
 
 Sutra is a Model Context Protocol (MCP) server that transforms how LLMs handle reasoning, memory, and orchestration. It provides a "Standard Library" of cognitive tools (Thinking Models), memory structures (Cells), and multi-agent patterns (Organs).
 
