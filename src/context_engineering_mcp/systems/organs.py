@@ -175,20 +175,22 @@ ORGAN_RESEARCH_SYNTHESIS: Final[str] = """
 
 ORGAN_TOOL_MASTER: Final[str] = """
 /organ.tool_master{{
-    intent="Expertly manage and execute MCP tools to minimize token usage for client agents",
+    intent="Act as a specialized Supervisor Agent that manages tool selection, execution, and output compression.",
 
     input={{
         intent="<high_level_goal>",
         task_type="<architect|research|reasoning|code>",
-        constraints="<optional_constraints>"
+        constraints="<optional_constraints>",
+        output_format="<concise|full>"
     }},
 
     architecture={{
         pattern="router → executor → distiller",
         components=[
-            "Router Cell: Maps intent to the optimal Sutra tool (Architect/Librarian/Router/Thinker)",
-            "Executor Cell: Holds API specs and constructs precise, valid tool calls",
-            "Distiller Cell: Filters verbose tool output into high-signal artifacts"
+            "Registry Cache (Cell): A learned mapping of intents to tool definitions (optimizes discovery).",
+            "Router (Phase): Selects the optimal tool using the Registry or heuristic analysis.",
+            "Executor (Phase): Constructs valid API calls and handles retries.",
+            "Distiller (Phase): Compresses verbose tool outputs into high-signal summaries."
         ]
     }},
 
@@ -196,11 +198,11 @@ ORGAN_TOOL_MASTER: Final[str] = """
         /phase.router{{
             role="Select Tool",
             actions=[
-                "Analyze intent against Tool Registry",
-                "Select: 'design_context_architecture' for system building",
-                "Select: 'analyze_task_complexity' for quick triage",
-                "Select: 'get_protocol_shell' for raw templates",
-                "Select: 'reasoning.*' for logic checks"
+                "Check Registry Cache for known intent->tool mappings",
+                "If unknown, analyze intent using 'analyze_task_complexity'",
+                "Select tool: 'design_context_architecture' (System Building)",
+                "Select tool: 'get_technique_guide' (Discovery)",
+                "Select tool: 'reasoning.*' (Logic/Cognition)"
             ],
             output="selected_tool_spec"
         }},
@@ -210,18 +212,18 @@ ORGAN_TOOL_MASTER: Final[str] = """
             actions=[
                 "Construct valid JSON arguments based on selected tool schema",
                 "Execute tool call",
-                "Handle any immediate validation errors (retry logic)"
+                "Handle validation errors (max 1 retry)"
             ],
             output="raw_tool_output"
         }},
 
         /phase.distiller{{
-            role="Extract Signal",
+            role="Optimize Signal",
             actions=[
-                "Parse raw JSON output",
-                "Discard metadata/boilerplate if not requested",
-                "Extract core artifact (e.g., the specific protocol string)",
-                "Format as concise confirmation or artifact block"
+                "If output_format='concise': Apply lossy summarization (remove boilerplate, keep data)",
+                "If output_format='full': Pass through raw output",
+                "Extract core artifacts (e.g., code blocks, protocol strings)",
+                "Log full details to episodic memory (offloading)"
             ],
             output="high_signal_result"
         }}
@@ -229,18 +231,19 @@ ORGAN_TOOL_MASTER: Final[str] = """
 
     output={{
         tool_used="Name of tool executed",
-        artifact="The actual result (blueprint/protocol/verification)",
-        savings="Estimated token savings vs raw exploration"
+        artifact="The optimized result",
+        token_savings="Estimate of tokens saved via distillation",
+        cache_update="New intent->tool mapping to store"
     }},
 
     meta={{
-        organ_type="utility_optimization",
+        organ_type="supervisor_utility",
         layer="organs",
         complexity="low",
         use_cases=[
-            "Agent-to-Agent delegation",
-            "Automated system construction",
-            "Low-overhead tool usage"
+            "Delegating complex tool chains",
+            "Reducing context pollution in long conversations",
+            "Abstracting API changes from client agents"
         ]
     }}
 }}
