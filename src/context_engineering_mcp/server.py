@@ -1,3 +1,5 @@
+from typing import Any
+
 from mcp.server.fastmcp import FastMCP
 from pydantic import BaseModel, Field, ValidationError
 
@@ -91,7 +93,7 @@ def design_context_architecture(goal: str, constraints: str | None = None) -> di
     c = (model.constraints or "").lower()
 
     # Blueprint Defaults
-    blueprint = {
+    blueprint: dict[str, Any] = {
         "name": "Custom System",
         "rationale": "General purpose context structure.",
         "components": {
