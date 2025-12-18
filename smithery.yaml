@@ -1,8 +1,12 @@
+runtime: "container"
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
 startCommand:
-  type: stdio
+  type: "stdio"
   config:
-    command: "uv"
-    args: ["tool", "run", "context-engineering-mcp"]
+    command: "python"
+    args: ["-m", "context_engineering_mcp.server"]
   configSchema:
-    type: object
+    type: "object"
     properties: {}
