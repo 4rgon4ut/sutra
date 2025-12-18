@@ -6,16 +6,19 @@ on:
       - "v*"
 
 jobs:
-  build:
-    name: Build & Release Draft
+  release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       - name: Set up Python
         run: uv python install 3.11
@@ -23,9 +26,10 @@ jobs:
       - name: Build package
         run: uv build
 
-      - name: Create Release Draft
-        uses: softprops/action-gh-release@v1
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
         with:
-          draft: true
           files: dist/*
           generate_release_notes: true
+          draft: true
+          prerelease: false
