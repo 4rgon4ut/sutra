@@ -1,4 +1,5 @@
 from mcp.server.fastmcp import FastMCP
+from pydantic import BaseModel, Field, ValidationError
 
 from context_engineering_mcp.cognitive import register_thinking_models
 from context_engineering_mcp.core import (
@@ -17,6 +18,38 @@ mcp = FastMCP("Context Engineering MCP")
 # Register cognitive tools
 register_thinking_models(mcp)
 
+
+# --- Input Models ---
+
+class TechniqueGuideInput(BaseModel):
+    category: str = Field(
+        "all",
+        pattern="^(reasoning|workflow|code|project|all)$",
+        description="Filter category."
+    )
+
+
+class TaskComplexityInput(BaseModel):
+    task_description: str = Field(..., min_length=5, description="The user's prompt or task.")
+
+
+class ProtocolShellInput(BaseModel):
+    name: str = Field("MyProtocol", min_length=1, description="Protocol name.")
+    intent: str | None = Field(None, description="Optional intent.")
+
+
+class PromptProgramInput(BaseModel):
+    program_type: str = Field("math", pattern="^(math|debate)$", description="Program type.")
+
+
+class CellProtocolInput(BaseModel):
+    name: str = Field("cell.protocol.key_value", min_length=1, description="Cell protocol name.")
+
+
+class OrganInput(BaseModel):
+    name: str = Field("debate_council", min_length=1, description="Organ name.")
+
+
 # --- Tools ---
 
 
@@ -29,6 +62,11 @@ def get_technique_guide(category: str = "all") -> str:
     Args:
         category: Filter by 'reasoning', 'workflow', 'code', 'project', or 'all'.
     """
+    try:
+        _ = TechniqueGuideInput(category=category)
+    except ValidationError as e:
+        return f"Input Validation Error: {e}"
+
     guide = """
     # Context Engineering Technique Guide
 
@@ -44,6 +82,9 @@ def get_technique_guide(category: str = "all") -> str:
     **Usage:**
     Call `get_protocol_shell(name="<Tool Name>")` to retrieve the specific template.
     """
+    # Simple filtering (mock implementation for now based on description)
+    # Ideally, this would filter the text, but the current implementation returns static text.
+    # The validation ensures 'category' is safe.
     return guide
 
 
@@ -55,7 +96,12 @@ def analyze_task_complexity(task_description: str) -> dict:
     Args:
         task_description: The user's prompt or task.
     """
-    task = task_description.lower()
+    try:
+        model = TaskComplexityInput(task_description=task_description)
+    except ValidationError as e:
+        return {"error": str(e)}
+
+    task = model.task_description.lower()
 
     # Heuristic Analysis
     if any(w in task for w in ["project", "repo", "codebase", "architecture"]):
@@ -93,12 +139,17 @@ def get_protocol_shell(name: str = "MyProtocol", intent: str | None = None) -> s
         name: The name of the protocol (e.g., 'reasoning.systematic') OR a custom name.
         intent: (Optional) The intent if creating a custom shell.
     """
-    template = get_protocol_template(name)
+    try:
+        model = ProtocolShellInput(name=name, intent=intent)
+    except ValidationError as e:
+        return f"Input Validation Error: {e}"
+
+    template = get_protocol_template(model.name)
     if template:
         return template
 
-    intent_str = intent or "Define your intent here"
-    return format_protocol_shell(name=name, intent=intent_str)
+    intent_str = model.intent or "Define your intent here"
+    return format_protocol_shell(name=model.name, intent=intent_str)
 
 
 @mcp.tool()
@@ -118,7 +169,12 @@ def get_prompt_program(program_type: str = "math") -> str:
     Args:
         program_type: The type of program ('math', 'debate').
     """
-    return get_program_template(program_type)
+    try:
+        model = PromptProgramInput(program_type=program_type)
+    except ValidationError as e:
+        return f"Input Validation Error: {e}"
+        
+    return get_program_template(model.program_type)
 
 
 @mcp.tool()
@@ -129,12 +185,17 @@ def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
     Args:
         name: Identifier of the cell protocol (key_value, windowed, episodic).
     """
-    template = get_cell_protocol_template(name)
+    try:
+        model = CellProtocolInput(name=name)
+    except ValidationError as e:
+        return f"Input Validation Error: {e}"
+
+    template = get_cell_protocol_template(model.name)
     if template:
         return template
 
     available = ", ".join(sorted(CELL_PROTOCOL_REGISTRY.keys()))
-    return f"// Cell protocol '{name}' not found. Available protocols: {available}"
+    return f"// Cell protocol '{model.name}' not found. Available protocols: {available}"
 
 
 @mcp.tool()
@@ -148,7 +209,12 @@ def get_organ(name: str = "debate_council") -> str:
     Args:
         name: Identifier of the organ ('debate_council' for multi-perspective debate).
     """
-    return get_organ_template(name)
+    try:
+        model = OrganInput(name=name)
+    except ValidationError as e:
+        return f"Input Validation Error: {e}"
+
+    return get_organ_template(model.name)
 
 
 # --- Resources ---
