@@ -89,6 +89,7 @@ args = ["run", "context-engineering-mcp"]
 ## Usability & Optimization Tools
 *   **The Librarian (`get_technique_guide`)**: Returns a guide to available techniques, helping you or the LLM choose the right tool for the job.
 *   **The Router (`analyze_task_complexity`)**: Analyzes a task description and recommends the most efficient tool (Low/Medium/High complexity).
+*   **The Architect (`design_context_architecture`)**: Generates a system blueprint (Organs + Cells + Models) for building custom agents.
 
 ## Programmatic Usage (Python)
 
