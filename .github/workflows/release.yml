@@ -27,10 +27,11 @@ jobs:
       - name: Build package
         run: uv build
 
-      - name: Publish to GitHub Releases
-        uses: softprops/action-gh-release@v2
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          files: dist/*
-          generate_release_notes: true
-          draft: true
-          prerelease: false
+          artifacts: "dist/*"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          generateReleaseNotes: true
+          makeLatest: true

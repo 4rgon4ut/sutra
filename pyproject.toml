@@ -25,3 +25,17 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/context_engineering_mcp"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github",
+    "/.gitignore",
+    "/AGENTS.md",
+    "/TODO.md",
+    "/test_server.py",
+    "/.claude",
+    "/.context",
+    "/.serena",
+    "/.gemini",
+    "/dist",
+]
