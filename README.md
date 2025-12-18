@@ -1,5 +1,7 @@
 # Sutra
 
+mcp-name: io.github.4rgon4ut/sutra
+
 **The MCP Context Engineering Engine**
 
 Sutra is a Model Context Protocol (MCP) server that transforms how LLMs handle reasoning, memory, and orchestration. It provides a "Standard Library" of cognitive tools (Thinking Models), memory structures (Cells), and multi-agent patterns (Organs).
