@@ -18,8 +18,12 @@ pip install context-engineering-mcp
 
 ## Configuration
 
-### Claude Desktop
-Add to your `claude_desktop_config.json`:
+Select your agent below and copy-paste the config.
+
+<details>
+<summary>Claude Desktop</summary>
+
+Add to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -30,12 +34,65 @@ Add to your `claude_desktop_config.json`:
   }
 }
 ```
+</details>
 
-### Cursor / Windsurf
-Add to your MCP settings:
-- **Type**: Command
-- **Command**: `uv`
-- **Args**: `tool run context-engineering-mcp`
+<details>
+<summary>Claude Code</summary>
+
+Run this in your terminal:
+```bash
+claude mcp add sutra uv tool run context-engineering-mcp
+```
+</details>
+
+<details>
+<summary>Aider</summary>
+
+Run aider with the mcp flag:
+```bash
+aider --mcp "uv tool run context-engineering-mcp"
+```
+Or add to `.aider.conf.yml`:
+```yaml
+mcp: ["uv tool run context-engineering-mcp"]
+```
+</details>
+
+<details>
+<summary>Gemini CLI</summary>
+
+Add to `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "sutra": {
+      "command": "uv",
+      "args": ["tool", "run", "context-engineering-mcp"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary>Cursor / Windsurf</summary>
+
+In MCP settings, add a new server:
+- **Name**: Sutra
+- **Type**: command
+- **Command**: `uv tool run context-engineering-mcp`
+</details>
+
+<details>
+<summary>Codex</summary>
+
+Add to your config (TOML):
+```toml
+[mcp_servers.sutra]
+command = "uv"
+args = ["tool", "run", "context-engineering-mcp"]
+```
+</details>
 
 ## Core Features (v0.1.0)
 
