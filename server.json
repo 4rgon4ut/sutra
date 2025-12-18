@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.4rgon4ut/sutra",
+  "description": "The MCP Context Engineering Engine. Provides a 'Standard Library' of cognitive tools, memory structures, and multi-agent patterns.",
+  "repository": {
+    "url": "https://github.com/4rgon4ut/sutra",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "context-engineering-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": []
+    }
+  ]
+}
