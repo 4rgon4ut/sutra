@@ -1,0 +1,9 @@
+smithery:
+  name: "sutra"
+  description: "The MCP Context Engineering Engine"
+  repository: "https://github.com/4rgon4ut/sutra"
+  branch: "main"
+  python:
+    version: "3.10"
+    entry: "context_engineering_mcp.server:main"
+    install: "pip install context-engineering-mcp"
