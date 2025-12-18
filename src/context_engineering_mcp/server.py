@@ -21,16 +21,19 @@ register_thinking_models(mcp)
 
 # --- Input Models ---
 
+
 class TechniqueGuideInput(BaseModel):
     category: str = Field(
         "all",
         pattern="^(reasoning|workflow|code|project|all)$",
-        description="Filter category."
+        description="Filter category.",
     )
 
 
 class TaskComplexityInput(BaseModel):
-    task_description: str = Field(..., min_length=5, description="The user's prompt or task.")
+    task_description: str = Field(
+        ..., min_length=5, description="The user's prompt or task."
+    )
 
 
 class ProtocolShellInput(BaseModel):
@@ -39,11 +42,15 @@ class ProtocolShellInput(BaseModel):
 
 
 class PromptProgramInput(BaseModel):
-    program_type: str = Field("math", pattern="^(math|debate)$", description="Program type.")
+    program_type: str = Field(
+        "math", pattern="^(math|debate)$", description="Program type."
+    )
 
 
 class CellProtocolInput(BaseModel):
-    name: str = Field("cell.protocol.key_value", min_length=1, description="Cell protocol name.")
+    name: str = Field(
+        "cell.protocol.key_value", min_length=1, description="Cell protocol name."
+    )
 
 
 class OrganInput(BaseModel):
@@ -51,8 +58,12 @@ class OrganInput(BaseModel):
 
 
 class DesignArchitectureInput(BaseModel):
-    goal: str = Field(..., min_length=5, description="The goal of the system to design.")
-    constraints: str | None = Field(None, description="Optional constraints or preferences.")
+    goal: str = Field(
+        ..., min_length=5, description="The goal of the system to design."
+    )
+    constraints: str | None = Field(
+        None, description="Optional constraints or preferences."
+    )
 
 
 # --- Tools ---
@@ -63,7 +74,7 @@ def design_context_architecture(goal: str, constraints: str | None = None) -> di
     """
     Architects a custom context system based on a high-level goal (The Architect).
     Returns a blueprint of Sutra components (Molecules, Cells, Organs, Thinking Models).
-    
+
     Use this when the user wants to build a persistent agent or complex workflow
     rather than solving a single immediate task.
 
@@ -87,8 +98,8 @@ def design_context_architecture(goal: str, constraints: str | None = None) -> di
             "molecule": "Standard CoT",
             "cell": "cell.protocol.key_value",
             "organ": None,
-            "cognitive": "reasoning.understand_question"
-        }
+            "cognitive": "reasoning.understand_question",
+        },
     }
 
     if "lightweight" in c:
@@ -99,17 +110,23 @@ def design_context_architecture(goal: str, constraints: str | None = None) -> di
         blueprint["name"] = "Debate System"
         blueprint["components"]["organ"] = "organ.debate_council"
         blueprint["rationale"] = "Uses a multi-perspective organ to balance viewpoints."
-    
+
     elif "research" in g or "report" in g or "synthesize" in g:
         blueprint["name"] = "Research Engine"
         blueprint["components"]["organ"] = "organ.research_synthesis"
-        blueprint["components"]["cell"] = "cell.protocol.episodic" # Log research trails
-        blueprint["rationale"] = "Combines a synthesis organ with episodic memory to track findings."
+        blueprint["components"]["cell"] = (
+            "cell.protocol.episodic"  # Log research trails
+        )
+        blueprint["rationale"] = (
+            "Combines a synthesis organ with episodic memory to track findings."
+        )
 
     elif "learn" in g or "remember" in g or "style" in g:
         blueprint["name"] = "Adaptive Assistant"
         blueprint["components"]["cell"] = "cell.protocol.windowed"
-        blueprint["rationale"] = "Uses windowed memory to maintain recent context and style."
+        blueprint["rationale"] = (
+            "Uses windowed memory to maintain recent context and style."
+        )
 
     elif "code" in g or "bug" in g or "review" in g:
         blueprint["name"] = "Code Auditor"
@@ -173,12 +190,23 @@ def analyze_task_complexity(task_description: str) -> dict:
     task = model.task_description.lower()
 
     # Strategy: Constructor Mode (Build/Design)
-    if any(w in task for w in ["build", "create", "design", "architect", "system", "bot", "assistant"]):
+    if any(
+        w in task
+        for w in [
+            "build",
+            "create",
+            "design",
+            "architect",
+            "system",
+            "bot",
+            "assistant",
+        ]
+    ):
         return {
             "strategy": "constructor",
             "complexity": "Variable",
             "recommended_tool": "design_context_architecture",
-            "reasoning": "User wants to build a system/agent. Use the Architect to design a blueprint."
+            "reasoning": "User wants to build a system/agent. Use the Architect to design a blueprint.",
         }
 
     # Strategy: YOLO Mode (Direct Solve)
@@ -255,7 +283,7 @@ def get_prompt_program(program_type: str = "math") -> str:
         model = PromptProgramInput(program_type=program_type)
     except ValidationError as e:
         return f"Input Validation Error: {e}"
-        
+
     return get_program_template(model.program_type)
 
 
@@ -277,7 +305,9 @@ def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
         return template
 
     available = ", ".join(sorted(CELL_PROTOCOL_REGISTRY.keys()))
-    return f"// Cell protocol '{model.name}' not found. Available protocols: {available}"
+    return (
+        f"// Cell protocol '{model.name}' not found. Available protocols: {available}"
+    )
 
 
 @mcp.tool()

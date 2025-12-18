@@ -183,7 +183,9 @@ def get_organ_template(organ_name: str) -> str:
     Returns:
         Template string for the requested organ, or error message if not found.
     """
-    normalized_name = organ_name.lower().replace("organ.", "").replace("_", "").replace("-", "")
+    normalized_name = (
+        organ_name.lower().replace("organ.", "").replace("_", "").replace("-", "")
+    )
 
     # Match debate_council variants
     if normalized_name in ["debatecouncil", "debate", "multiperspective"]:
@@ -198,8 +200,7 @@ def get_organ_template(organ_name: str) -> str:
     return (
         f"// Organ '{organ_name}' not found.\\n"
         f"// Available organs: {', '.join(available)}\\n"
-        f"// Returning debate_council as example:\\n\\n"
-        + ORGAN_DEBATE_COUNCIL
+        f"// Returning debate_council as example:\\n\\n" + ORGAN_DEBATE_COUNCIL
     )
 
 

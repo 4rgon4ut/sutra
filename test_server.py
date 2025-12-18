@@ -40,9 +40,7 @@ def test_analyze_task_complexity():
         "I need to refactor this entire codebase and add tests"
     )
     assert high["strategy"] == "yolo"
-    assert (
-        high["complexity"] == "High" or high["complexity"] == "Medium"
-    )
+    assert high["complexity"] == "High" or high["complexity"] == "Medium"
 
     # Test YOLO Mode (Low)
     low = analyze_task_complexity("What is 2+2?")
@@ -53,17 +51,17 @@ def test_analyze_task_complexity():
 def test_design_context_architecture():
     """Test the architect tool."""
     from context_engineering_mcp.server import design_context_architecture
-    
+
     # Test Debate System
     debate = design_context_architecture(goal="Build a debate bot")
     assert debate["name"] == "Debate System"
     assert debate["components"]["organ"] == "organ.debate_council"
-    
+
     # Test Research Engine
     research = design_context_architecture(goal="Create a research assistant")
     assert research["name"] == "Research Engine"
     assert research["components"]["organ"] == "organ.research_synthesis"
-    
+
     # Test Default
     default = design_context_architecture(goal="Just something random")
     assert default["name"] == "Custom System"
@@ -105,7 +103,7 @@ def test_get_prompt_program_debate():
 def test_get_prompt_program_unknown():
     """Test that unknown program type returns validation error."""
     result = get_prompt_program(program_type="unknown_type")
-    
+
     assert "Input Validation Error" in result
     assert "program_type" in result
 
@@ -239,7 +237,7 @@ def test_get_organ_debate_council():
 def test_get_organ_research_synthesis():
     """Test research_synthesis organ retrieval."""
     result = get_organ("research_synthesis")
-    
+
     assert "/organ.research_synthesis" in result
     assert "scout" in result.lower()
     assert "architect" in result.lower()

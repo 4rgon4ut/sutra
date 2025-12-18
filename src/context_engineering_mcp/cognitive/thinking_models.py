@@ -13,25 +13,39 @@ from pydantic import BaseModel, Field, ValidationError
 class UnderstandQuestionInput(BaseModel):
     question: str = Field(..., min_length=3, description="The raw user ask to unpack.")
     context: Optional[str] = Field(None, description="Optional background knowledge.")
-    constraints: Optional[str] = Field(None, description="Explicit limits or success criteria.")
+    constraints: Optional[str] = Field(
+        None, description="Explicit limits or success criteria."
+    )
 
 
 class VerifyLogicInput(BaseModel):
-    claim: str = Field(..., min_length=3, description="The headline answer or assertion to validate.")
-    reasoning_trace: str = Field(..., min_length=10, description="The supporting chain-of-thought.")
+    claim: str = Field(
+        ..., min_length=3, description="The headline answer or assertion to validate."
+    )
+    reasoning_trace: str = Field(
+        ..., min_length=10, description="The supporting chain-of-thought."
+    )
     constraints: Optional[str] = Field(None, description="Optional guardrails.")
 
 
 class BacktrackingInput(BaseModel):
     objective: str = Field(..., min_length=3, description="Overall goal to satisfy.")
-    failed_step: str = Field(..., min_length=3, description="The step or subgoal that failed.")
-    trace: Optional[str] = Field(None, description="Optional reasoning trace leading to the failure.")
+    failed_step: str = Field(
+        ..., min_length=3, description="The step or subgoal that failed."
+    )
+    trace: Optional[str] = Field(
+        None, description="Optional reasoning trace leading to the failure."
+    )
     constraints: Optional[str] = Field(None, description="Guardrails or requirements.")
 
 
 class SymbolicAbstractInput(BaseModel):
-    expression: str = Field(..., min_length=1, description="The raw text or equation to abstract.")
-    mapping_hint: Optional[str] = Field(None, description="Optional guidance for token-to-symbol mapping.")
+    expression: str = Field(
+        ..., min_length=1, description="The raw text or equation to abstract."
+    )
+    mapping_hint: Optional[str] = Field(
+        None, description="Optional guidance for token-to-symbol mapping."
+    )
     goal: Optional[str] = Field(None, description="Optional downstream task.")
 
 
