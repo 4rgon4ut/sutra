@@ -77,11 +77,11 @@ def test_get_prompt_program_debate():
 
 
 def test_get_prompt_program_unknown():
-    """Test that unknown program type returns generic structure with warning."""
+    """Test that unknown program type returns validation error."""
     result = get_prompt_program(program_type="unknown_type")
-
-    assert "// Program type 'unknown_type' not yet implemented" in result
-    assert "// Prompt Program: Math Solver" in result
+    
+    assert "Input Validation Error" in result
+    assert "program_type" in result
 
 
 def test_get_molecular_template():
@@ -208,6 +208,16 @@ def test_get_organ_debate_council():
     assert "moderator" in result.lower() or "phase.moderator" in result
     assert "perspectives" in result.lower()
     assert "synthesis" in result.lower()
+
+
+def test_get_organ_research_synthesis():
+    """Test research_synthesis organ retrieval."""
+    result = get_organ("research_synthesis")
+    
+    assert "/organ.research_synthesis" in result
+    assert "scout" in result.lower()
+    assert "architect" in result.lower()
+    assert "scribe" in result.lower()
 
 
 def test_get_organ_unknown():

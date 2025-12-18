@@ -15,3 +15,6 @@ venv/
 .digest.txt
 .journal.md
 .serena/
+
+.gemini/
+gha-creds-*.json

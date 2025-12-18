@@ -99,6 +99,80 @@ ORGAN_DEBATE_COUNCIL: Final[str] = """
 }}
 """
 
+ORGAN_RESEARCH_SYNTHESIS: Final[str] = """
+/organ.research_synthesis{{
+    intent="Conduct comprehensive research and synthesis on a complex topic",
+
+    input={{
+        topic="<research_topic>",
+        depth="<high|medium|low>",
+        format="<report|brief|presentation>"
+    }},
+
+    architecture={{
+        pattern="scout → architect → scribe",
+        components=[
+            "Scout Cell: Explores the information landscape and gathers raw data",
+            "Architect Cell: Structures the information and outlines the narrative",
+            "Scribe Cell: Drafts the final content based on the blueprint"
+        ]
+    }},
+
+    process=[
+        /phase.scout{{
+            role="Gather Information",
+            actions=[
+                "Identify key domains and sub-topics",
+                "Retrieve relevant facts and data",
+                "Filter for relevance and credibility",
+                "Identify gaps requiring further investigation"
+            ],
+            output="raw_research_data"
+        }},
+
+        /phase.architect{{
+            role="Structure and Plan",
+            actions=[
+                "Analyze raw data for patterns and themes",
+                "Develop a logical outline or argument structure",
+                "Allocate evidence to specific sections",
+                "Define tone and style guidelines"
+            ],
+            output="content_blueprint"
+        }},
+
+        /phase.scribe{{
+            role="Draft Content",
+            actions=[
+                "Expand blueprint into full prose",
+                "Integrate evidence seamlessly",
+                "Refine language for clarity and impact",
+                "Format according to requirements"
+            ],
+            output="final_draft"
+        }}
+    ],
+
+    output={{
+        research_summary="Overview of gathered data",
+        blueprint="Structural plan of the content",
+        final_document="The complete synthesized output"
+    }},
+
+    meta={{
+        organ_type="sequential_workflow",
+        layer="organs",
+        complexity="medium",
+        use_cases=[
+            "Deep dive research reports",
+            "Literature reviews",
+            "Technical documentation",
+            "Content creation from disparate sources"
+        ]
+    }}
+}}
+"""
+
 
 def get_organ_template(organ_name: str) -> str:
     """Return an organ template for orchestrating multi-agent workflows.
@@ -115,8 +189,12 @@ def get_organ_template(organ_name: str) -> str:
     if normalized_name in ["debatecouncil", "debate", "multiperspective"]:
         return ORGAN_DEBATE_COUNCIL
 
+    # Match research_synthesis variants
+    if normalized_name in ["researchsynthesis", "research", "scoutarchitectscribe"]:
+        return ORGAN_RESEARCH_SYNTHESIS
+
     # Return helpful error for unknown organs
-    available = ["debate_council"]
+    available = ["debate_council", "research_synthesis"]
     return (
         f"// Organ '{organ_name}' not found.\\n"
         f"// Available organs: {', '.join(available)}\\n"
@@ -127,5 +205,6 @@ def get_organ_template(organ_name: str) -> str:
 
 __all__ = [
     "ORGAN_DEBATE_COUNCIL",
+    "ORGAN_RESEARCH_SYNTHESIS",
     "get_organ_template",
 ]
