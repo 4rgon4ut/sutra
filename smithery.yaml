@@ -1,6 +1,14 @@
+runtime: container
+build:
+  dockerfile: Dockerfile
+  dockerBuildPath: .
 startCommand:
   type: stdio
-  config:
-    command: "uv"
-    args: ["tool", "run", "context-engineering-mcp"]
-
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |-
+    (config) => ({
+      command: 'python',
+      args: ['-m', 'context_engineering_mcp.server']
+    })
