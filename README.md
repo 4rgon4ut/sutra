@@ -1,146 +1,77 @@
-# sutra
+# Sutra
 
-A Model Context Protocol (MCP) server providing structured prompting templates, protocol shells, and neural field architectures for advanced LLM reasoning.
+**The Context Engineering Engine for MCP**
 
-## Core Capabilities
+Sutra is a Model Context Protocol (MCP) server that transforms how LLMs handle reasoning, memory, and orchestration. It provides a "Standard Library" of cognitive tools (Thinking Models), memory structures (Cells), and multi-agent patterns (Organs).
 
-*   **Molecules**: Templates for few-shot learning and Chain-of-Thought (CoT) patterns.
-*   **Protocols**: Structured reasoning shells defined by Intent, Input, Process, and Output.
-*   **Fields**: Primitives for neural field context persistence and resonance.
+## 🚀 Installation
 
-## Installation & Configuration
-
-### Installation
-
-We recommend using `uv` for a fast and reliable installation:
-
+### Using `uv` (Recommended)
 ```bash
-uv tool install .
+uv tool install context-engineering-mcp
 ```
 
-Or using `pip`:
-
+### Using `pip`
 ```bash
-pip install .
+pip install context-engineering-mcp
 ```
 
-### Updating
+## ⚙️ Configuration
 
-To update to the latest version of your local copy:
-
-```bash
-uv tool install . --force
-```
-or
-```bash
-pip install . --upgrade
-```
-
-### Configuration
-
-#### Claude Desktop
-Add to `claude_desktop_config.json`:
+### Claude Desktop
+Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
     "sutra": {
       "command": "uv",
-      "args": ["run", "context-engineering-mcp"]
+      "args": ["tool", "run", "context-engineering-mcp"]
     }
   }
 }
 ```
 
-#### Gemini CLI
-Add to `~/.gemini/settings.json`:
-```json
-{
-  "mcpServers": {
-    "sutra": {
-      "command": "uv",
-      "args": ["run", "context-engineering-mcp"]
-    }
-  }
-}
-```
+### Cursor / Windsurf
+Add to your MCP settings:
+- **Type**: Command
+- **Command**: `uv`
+- **Args**: `tool run context-engineering-mcp`
 
-#### Continue.dev (VS Code / JetBrains)
-Add to `~/.continue/config.json`:
-```json
-{
-  "mcpServers": [
-    {
-      "name": "sutra",
-      "command": "uv",
-      "args": ["run", "context-engineering-mcp"]
-    }
-  ]
-}
-```
+## 🧠 Core Features (v0.1.0)
 
-#### Codex
-Add to your configuration file (TOML):
-```toml
-[mcp_servers.sutra]
-command = "uv"
-args = ["run", "context-engineering-mcp"]
-```
+### 1. The Gateway (Router)
+Sutra automatically analyzes your request to decide the best strategy:
+- **YOLO Mode**: For immediate tasks ("Fix this bug"), it routes to specific cognitive tools.
+- **Constructor Mode**: For system design ("Build a bot"), it routes to the Architect.
 
-## Usability & Optimization Tools
-*   **The Librarian (`get_technique_guide`)**: Returns a guide to available techniques, helping you or the LLM choose the right tool for the job.
-*   **The Router (`analyze_task_complexity`)**: Analyzes a task description and recommends the most efficient tool (Low/Medium/High complexity).
-*   **The Architect (`design_context_architecture`)**: Generates a system blueprint (Organs + Cells + Models) for building custom agents.
+### 2. The Architect
+Generates blueprints for custom agents, combining:
+- **Thinking Models**: `understand_question`, `verify_logic`, `backtracking`, `symbolic_abstract`.
+- **Memory Cells**: `key_value` (State), `windowed` (Short-term), `episodic` (Long-term).
+- **Organs**: `debate_council` (Multi-perspective), `research_synthesis` (Deep Dive).
 
-## Programmatic Usage (Python)
+### 3. The Librarian
+A manual discovery tool (`get_technique_guide`) that lets you or the agent browse the full catalog of Context Engineering techniques.
 
-You can use the `mcp` library to connect to the server programmatically:
+## 🛠️ Development
 
-```python
-import asyncio
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+**Requirements**: Python 3.10+, `uv` (optional but recommended).
 
-async def main():
-    # 1. Connect to the server
-    server = StdioServerParameters(command="uv", args=["run", "context-engineering-mcp"])
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/4rgon4ut/sutra.git
+   cd sutra
+   ```
+2. Install dependencies:
+   ```bash
+   uv sync --all-extras
+   # OR
+   pip install -e ".[dev]"
+   ```
+3. Run tests:
+   ```bash
+   pytest
+   ```
 
-    async with stdio_client(server) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-
-            # 2. Call a tool (Simple & Direct)
-            result = await session.call_tool("get_technique_guide", arguments={})
-            print(result.content[0].text)
-
-            # 3. Get a specific template
-            shell = await session.call_tool("get_protocol_shell", arguments={"name": "code.analyze"})
-            print(shell.content[0].text)
-
-```
-
-## Troubleshooting
-
-### "The model doesn't see my tools"
-If you are using **Continue** or a similar extension and the model says it can't find the tools:
-1.  **Restart VS Code**: MCP servers often need a restart to register.
-2.  **Check the Logs**: Look at the "Output" tab in VS Code and select "Continue" (or your extension) to see if the server crashed.
-3.  **Be Explicit**: Sometimes the model needs a nudge. Try asking:
-    > "Please call the `get_technique_guide` tool."
-4.  **Check Model Support**: Ensure you are using a model that supports tool calling (e.g., Gemini 1.5 Pro, Claude 3.5 Sonnet).
-
-### "Gemini Code Assist" (Official Extension)
-Note: The official Google Gemini Code Assist extension may have different MCP support than community extensions like Continue. Check the official documentation for how to enable MCP servers.
-
-## CLI Usage (via MCP CLI)
-
-If you have the `mcp-cli` installed, you can call tools directly:
-
-```bash
-mcp call get_technique_guide --arg category="reasoning"
-```
-
-## Acknowledgments
-
-Special thanks to:
-*   **[Andrej Karpathy](https://x.com/karpathy/status/1937902205765607626)** for his pioneering work and inspiration in the field of AI.
-*   **David Kim** for the [Context Engineering](https://github.com/davidkimai/Context-Engineering) framework, which heavily inspired the architecture of this server.
+## 📄 License
+MIT
