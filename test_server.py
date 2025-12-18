@@ -30,18 +30,44 @@ def test_get_technique_guide():
 
 
 def test_analyze_task_complexity():
-    # Test High Complexity
+    # Test Constructor Mode
+    constructor = analyze_task_complexity("Build a research assistant bot")
+    assert constructor["strategy"] == "constructor"
+    assert constructor["recommended_tool"] == "design_context_architecture"
+
+    # Test YOLO Mode (High)
     high = analyze_task_complexity(
         "I need to refactor this entire codebase and add tests"
     )
+    assert high["strategy"] == "yolo"
     assert (
         high["complexity"] == "High" or high["complexity"] == "Medium"
-    )  # "codebase" triggers Medium, "tests" triggers High. Logic might hit first match.
+    )
 
-    # Test Low Complexity
+    # Test YOLO Mode (Low)
     low = analyze_task_complexity("What is 2+2?")
+    assert low["strategy"] == "yolo"
     assert low["complexity"] == "Low"
-    assert low["recommended_tool"] == "Standard Molecule"
+
+
+def test_design_context_architecture():
+    """Test the architect tool."""
+    from context_engineering_mcp.server import design_context_architecture
+    
+    # Test Debate System
+    debate = design_context_architecture(goal="Build a debate bot")
+    assert debate["name"] == "Debate System"
+    assert debate["components"]["organ"] == "organ.debate_council"
+    
+    # Test Research Engine
+    research = design_context_architecture(goal="Create a research assistant")
+    assert research["name"] == "Research Engine"
+    assert research["components"]["organ"] == "organ.research_synthesis"
+    
+    # Test Default
+    default = design_context_architecture(goal="Just something random")
+    assert default["name"] == "Custom System"
+    assert default["components"]["molecule"] == "Standard CoT"
 
 
 def test_get_protocol_shell_registry():

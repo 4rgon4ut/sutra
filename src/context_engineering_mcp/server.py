@@ -50,7 +50,73 @@ class OrganInput(BaseModel):
     name: str = Field("debate_council", min_length=1, description="Organ name.")
 
 
+class DesignArchitectureInput(BaseModel):
+    goal: str = Field(..., min_length=5, description="The goal of the system to design.")
+    constraints: str | None = Field(None, description="Optional constraints or preferences.")
+
+
 # --- Tools ---
+
+
+@mcp.tool()
+def design_context_architecture(goal: str, constraints: str | None = None) -> dict:
+    """
+    Architects a custom context system based on a high-level goal (The Architect).
+    Returns a blueprint of Sutra components (Molecules, Cells, Organs, Thinking Models).
+    
+    Use this when the user wants to build a persistent agent or complex workflow
+    rather than solving a single immediate task.
+
+    Args:
+        goal: The user's objective (e.g., "Build a writing assistant that learns my style").
+        constraints: Optional limits (e.g., "Must be lightweight").
+    """
+    try:
+        model = DesignArchitectureInput(goal=goal, constraints=constraints)
+    except ValidationError as e:
+        return {"error": str(e)}
+
+    g = model.goal.lower()
+    c = (model.constraints or "").lower()
+
+    # Blueprint Defaults
+    blueprint = {
+        "name": "Custom System",
+        "rationale": "General purpose context structure.",
+        "components": {
+            "molecule": "Standard CoT",
+            "cell": "cell.protocol.key_value",
+            "organ": None,
+            "cognitive": "reasoning.understand_question"
+        }
+    }
+
+    if "lightweight" in c:
+        blueprint["name"] += " (Light)"
+
+    # Heuristic Architecture Logic
+    if "debate" in g or "perspective" in g:
+        blueprint["name"] = "Debate System"
+        blueprint["components"]["organ"] = "organ.debate_council"
+        blueprint["rationale"] = "Uses a multi-perspective organ to balance viewpoints."
+    
+    elif "research" in g or "report" in g or "synthesize" in g:
+        blueprint["name"] = "Research Engine"
+        blueprint["components"]["organ"] = "organ.research_synthesis"
+        blueprint["components"]["cell"] = "cell.protocol.episodic" # Log research trails
+        blueprint["rationale"] = "Combines a synthesis organ with episodic memory to track findings."
+
+    elif "learn" in g or "remember" in g or "style" in g:
+        blueprint["name"] = "Adaptive Assistant"
+        blueprint["components"]["cell"] = "cell.protocol.windowed"
+        blueprint["rationale"] = "Uses windowed memory to maintain recent context and style."
+
+    elif "code" in g or "bug" in g or "review" in g:
+        blueprint["name"] = "Code Auditor"
+        blueprint["components"]["cognitive"] = "reasoning.verify_logic"
+        blueprint["rationale"] = "Focuses on logic verification for code correctness."
+
+    return blueprint
 
 
 @mcp.tool()
@@ -72,6 +138,8 @@ def get_technique_guide(category: str = "all") -> str:
 
     | Category | Tool | Complexity | Best For |
     |----------|------|------------|----------|
+    | **Architect** | `design_context_architecture` | Variable | **Constructor Mode**: Building custom agents/systems. |
+    | **Router** | `analyze_task_complexity` | Low | **YOLO Mode**: Finding the right tool automatically. |
     | **Reasoning** | `reasoning.systematic` | High | Complex problems requiring step-by-step logic. |
     | **Reasoning** | `thinking.extended` | Very High | Deep exploration, trade-off analysis, simulation. |
     | **Workflow** | `workflow.test_driven` | High | Implementing features with TDD. |
@@ -80,7 +148,8 @@ def get_technique_guide(category: str = "all") -> str:
     | **Basic** | `Standard Molecule` | Low | Simple pattern matching (use `get_molecular_template`). |
 
     **Usage:**
-    Call `get_protocol_shell(name="<Tool Name>")` to retrieve the specific template.
+    - **YOLO Mode**: Call `analyze_task_complexity` to get a quick tool recommendation.
+    - **Constructor Mode**: Call `design_context_architecture` to get a full system blueprint.
     """
     # Simple filtering (mock implementation for now based on description)
     # Ideally, this would filter the text, but the current implementation returns static text.
@@ -103,27 +172,40 @@ def analyze_task_complexity(task_description: str) -> dict:
 
     task = model.task_description.lower()
 
-    # Heuristic Analysis
+    # Strategy: Constructor Mode (Build/Design)
+    if any(w in task for w in ["build", "create", "design", "architect", "system", "bot", "assistant"]):
+        return {
+            "strategy": "constructor",
+            "complexity": "Variable",
+            "recommended_tool": "design_context_architecture",
+            "reasoning": "User wants to build a system/agent. Use the Architect to design a blueprint."
+        }
+
+    # Strategy: YOLO Mode (Direct Solve)
     if any(w in task for w in ["project", "repo", "codebase", "architecture"]):
         return {
+            "strategy": "yolo",
             "complexity": "Medium",
             "recommended_tool": "project.explore",
             "reasoning": "Task involves project-level understanding.",
         }
     elif any(w in task for w in ["test", "tdd", "verify"]):
         return {
+            "strategy": "yolo",
             "complexity": "High",
             "recommended_tool": "workflow.test_driven",
             "reasoning": "Task involves testing or verification workflows.",
         }
     elif any(w in task for w in ["analyze", "reason", "think", "solve", "complex"]):
         return {
+            "strategy": "yolo",
             "complexity": "High",
             "recommended_tool": "reasoning.systematic",
             "reasoning": "Task requires structured reasoning.",
         }
     else:
         return {
+            "strategy": "yolo",
             "complexity": "Low",
             "recommended_tool": "Standard Molecule",
             "reasoning": "Task appears simple. Use a basic prompt or few-shot molecule.",
