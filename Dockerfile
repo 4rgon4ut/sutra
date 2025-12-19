@@ -9,8 +9,11 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Install the package
-RUN uv pip install --system .
+# Install the package and uvicorn for HTTP support
+RUN uv pip install --system . uvicorn
 
-# Run the server
+# Expose the default port
+EXPOSE 8000
+
+# Run the server (default to stdio, but overrideable by smithery.yaml)
 ENTRYPOINT ["python", "-m", "context_engineering_mcp.server"]

@@ -3,13 +3,15 @@ build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
 startCommand:
-  type: "stdio"
+  type: "http"
   configSchema:
     type: "object"
     properties: {}
   commandFunction: |-
     (config) => ({
       command: 'python',
-      args: ['-m', 'context_engineering_mcp.server'],
-      env: {}
+      args: ['-m', 'context_engineering_mcp.server', '--http'],
+      env: {
+        PORT: '8080'
+      }
     })

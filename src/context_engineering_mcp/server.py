@@ -1,3 +1,4 @@
+import sys
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
@@ -388,8 +389,14 @@ def get_neural_fields() -> str:
     """
 
 
+
 def main():
-    mcp.run()
+    if "--http" in sys.argv:
+        import os
+        port = int(os.getenv("PORT", "8000"))
+        mcp.run(transport="http", port=port)
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":
