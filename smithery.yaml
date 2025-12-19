@@ -4,9 +4,12 @@ build:
   dockerBuildPath: "."
 startCommand:
   type: "stdio"
-  config:
-    command: "python"
-    args: ["-m", "context_engineering_mcp.server"]
   configSchema:
     type: "object"
     properties: {}
+  commandFunction: |-
+    (config) => ({
+      command: 'python',
+      args: ['-m', 'context_engineering_mcp.server'],
+      env: {}
+    })
