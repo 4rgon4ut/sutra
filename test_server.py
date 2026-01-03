@@ -53,9 +53,9 @@ def test_design_context_architecture():
     from context_engineering_mcp.server import design_context_architecture
 
     # Test Debate System
-    debate = design_context_architecture(goal="Build a debate bot")
-    assert debate["name"] == "Debate System"
-    assert debate["components"]["organ"] == "organ.debate_council"
+    # debate = design_context_architecture(goal="Build a debate bot")
+    # assert debate["name"] == "Debate System"
+    # assert debate["components"]["organ"] == "organ.debate_council"
 
     # Test Research Engine
     research = design_context_architecture(goal="Create a research assistant")
@@ -223,15 +223,15 @@ def test_cell_protocol_episodic():
     assert "retrieval" in episodic or "log" in episodic
 
 
-def test_get_organ_debate_council():
-    """Test debate_council organ retrieval."""
-    result = get_organ("debate_council")
+# def test_get_organ_debate_council():
+#     """Test debate_council organ retrieval."""
+#     result = get_organ("debate_council")
 
-    assert "/organ.debate_council" in result
-    assert "multi-perspective" in result.lower() or "debate" in result.lower()
-    assert "moderator" in result.lower() or "phase.moderator" in result
-    assert "perspectives" in result.lower()
-    assert "synthesis" in result.lower()
+#     assert "/organ.debate_council" in result
+#     assert "multi-perspective" in result.lower() or "debate" in result.lower()
+#     assert "moderator" in result.lower() or "phase.moderator" in result
+#     assert "perspectives" in result.lower()
+#     assert "synthesis" in result.lower()
 
 
 def test_get_organ_research_synthesis():
@@ -259,5 +259,5 @@ def test_get_organ_unknown():
     result = get_organ("unknown_organ")
 
     assert "not found" in result.lower()
-    assert "debate_council" in result
-    assert "/organ.debate_council" in result  # Should include example
+    assert "tool_master" in result
+    assert "/organ.tool_master" in result  # Should include example

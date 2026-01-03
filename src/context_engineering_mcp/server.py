@@ -57,7 +57,7 @@ class CellProtocolInput(BaseModel):
 
 
 class OrganInput(BaseModel):
-    name: str = Field("debate_council", min_length=1, description="Organ name.")
+    name: str = Field("tool_master", min_length=1, description="Organ name.")
 
 
 class DesignArchitectureInput(BaseModel):
@@ -109,12 +109,12 @@ def design_context_architecture(goal: str, constraints: str | None = None) -> di
         blueprint["name"] += " (Light)"
 
     # Heuristic Architecture Logic
-    if "debate" in g or "perspective" in g:
-        blueprint["name"] = "Debate System"
-        blueprint["components"]["organ"] = "organ.debate_council"
-        blueprint["rationale"] = "Uses a multi-perspective organ to balance viewpoints."
+    # if "debate" in g or "perspective" in g:
+    #     blueprint["name"] = "Debate System"
+    #     blueprint["components"]["organ"] = "organ.debate_council"
+    #     blueprint["rationale"] = "Uses a multi-perspective organ to balance viewpoints."
 
-    elif "research" in g or "report" in g or "synthesize" in g:
+    if "research" in g or "report" in g or "synthesize" in g:
         blueprint["name"] = "Research Engine"
         blueprint["components"]["organ"] = "organ.research_synthesis"
         blueprint["components"]["cell"] = (
@@ -314,7 +314,7 @@ def get_cell_protocol(name: str = "cell.protocol.key_value") -> str:
 
 
 @mcp.tool()
-def get_organ(name: str = "debate_council") -> str:
+def get_organ(name: str = "tool_master") -> str:
     """
     Returns an organ template for multi-agent orchestration (Layer 4).
 

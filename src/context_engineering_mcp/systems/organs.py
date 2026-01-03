@@ -264,8 +264,8 @@ def get_organ_template(organ_name: str) -> str:
     )
 
     # Match debate_council variants
-    if normalized_name in ["debatecouncil", "debate", "multiperspective"]:
-        return ORGAN_DEBATE_COUNCIL
+    # if normalized_name in ["debatecouncil", "debate", "multiperspective"]:
+    #     return ORGAN_DEBATE_COUNCIL
 
     # Match research_synthesis variants
     if normalized_name in ["researchsynthesis", "research", "scoutarchitectscribe"]:
@@ -276,11 +276,11 @@ def get_organ_template(organ_name: str) -> str:
         return ORGAN_TOOL_MASTER
 
     # Return helpful error for unknown organs
-    available = ["debate_council", "research_synthesis", "tool_master"]
+    available = ["research_synthesis", "tool_master"]
     return (
         f"// Organ '{organ_name}' not found.\\n"
         f"// Available organs: {', '.join(available)}\\n"
-        f"// Returning debate_council as example:\\n\\n" + ORGAN_DEBATE_COUNCIL
+        f"// Returning tool_master as example:\\n\\n" + ORGAN_TOOL_MASTER
     )
 
 
