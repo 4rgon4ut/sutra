@@ -389,10 +389,10 @@ def get_neural_fields() -> str:
     """
 
 
-
 def main():
     if "--http" in sys.argv:
         import os
+
         port = int(os.getenv("PORT", "8000"))
         mcp.run(transport="http", port=port)
     else:
